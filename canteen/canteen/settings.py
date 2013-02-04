@@ -60,7 +60,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_DIR, '/media/')
+STATIC_ROOT = os.path.join(PROJECT_DIR, '/static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -131,6 +131,11 @@ INSTALLED_APPS = (
     'tagging',
 
     'debug_toolbar',
+
+    #foods
+    'canteen.foods',
+
+    #'canteen.accounts',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -214,7 +219,9 @@ DEBUG_TOOLBAR_CONFIG = {
       'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
       #'EXTRA_SIGNALS': [''],
       'HIDE_DJANGO_SQL': False,
-      'TAG': 'div',
-      'ENABLE_STACKTRACES' : True,
+      'TAG': 'canteenENABLE_STACKTRACES' : True,
       }
 
+
+#TODO try the ssh connection
+ENABLE_SSH = False
