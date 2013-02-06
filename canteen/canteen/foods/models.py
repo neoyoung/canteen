@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.http import Http404
 from canteen import settings
@@ -18,7 +19,7 @@ class Category(models.Model):
     """ model class containing information about a category  """
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50, unique=True,
-                            help_text='Unique value for product page URL, created automatically from name.')
+                            help_text='Unique value for food page URL, created automatically from name.')
     description = models.TextField()
     is_active = models.BooleanField(default=True)
     meta_keywords = models.CharField(max_length=255,
@@ -49,9 +50,9 @@ class Category(models.Model):
 
 
 class ActiveFoodManager(models.Manager):
-    """ Manager class to return only those products where each instance is active """
+    """ Manager class to return only those foods where each instance is active """
     def get_query_set(self):
-        return super(ActiveProductManager, self).get_query_set().filter(is_active=True)
+        return super(ActiveFoodManager, self).get_query_set().filter(is_active=True)
 
 #class FeaturedProductManager(models.Manager):
     #""" Manager class to return only those products where each instance is featured """
@@ -63,10 +64,10 @@ class Food(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for food page URL, created automatically from name.')
-    brand = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=9,decimal_places=2,blank=True,default=0.00)
+    #brand = models.CharField(max_length=50)
+    #price = models.DecimalField(max_digits=9,decimal_places=2,blank=True,default=0.00)
     is_active = models.BooleanField(default=True)
-    is_lunch = models.BooleanField(defautl=True)
+    is_lunch = models.BooleanField(default=True)
     #is_featured = models.BooleanField(default=False)
     quantity = models.IntegerField()
     description = models.TextField()
@@ -76,6 +77,7 @@ class Food(models.Model):
                                         help_text='Content for description meta tag')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     time_at = models.DateField(auto_now=True,editable=True)
     categories = models.ManyToManyField(Category)
 
@@ -85,7 +87,7 @@ class Food(models.Model):
     image_caption = models.CharField(max_length=200)
 
     objects = models.Manager()
-    active = ActiveProductManager()
+    active = ActiveFoodManager()
     #featured = FeaturedProductManager()
 
     class Meta:
@@ -97,7 +99,7 @@ class Food(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('catalog_product', (), { 'product_slug': self.slug })
+        return ('catalog_food', (), { 'food_slug': self.slug })
 
     #@property
     #def sale_price(self):
@@ -145,16 +147,16 @@ class Food(models.Model):
         #products = Product.active.filter(orderitem__in=items).distinct()
         #return products
 
-    @property
-    def cache_key(self):
-        return self.get_absolute_url()
+    #@property
+    #def cache_key(self):
+        #return self.get_absolute_url()
 try:
     tagging.register(Food)
 except tagging.AlreadyRegistered:
     pass
 
 class ActiveFoodReviewManager(models.Manager):
-    """ Manager class to return only those product reviews where each instance is approved """
+    """ Manager class to return only those food reviews where each instance is approved """
     def all(self):
         return super(ActiveFoodReviewManager, self).all().filter(is_approved=True)
 
@@ -172,6 +174,11 @@ class FoodReview(models.Model):
 
     objects = models.Manager()
     approved = ActiveFoodReviewManager()
+
+    class Meta():
+       db_table = 'food_review'
+       ordering = ['-date']
+
 
 # attach signals to Product and Category model classes
 # to update cache data on save and delete operations

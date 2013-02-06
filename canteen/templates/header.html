@@ -2,7 +2,8 @@
    <head>
       <meta charset="UTF-8">
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+      <!--<link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">-->
+      <link href="{{ STATIC_URL  }}css/style.css" rel="stylesheet" type="text/css"/>
       <link rel="SHORTCUT ICON" href="{{ STATIC_URL }}images/favicon.ico" />
       <title>{% block title %}{% if page_title %}{{ page_title }} - {% endif %}{{ site_name }}{% endblock %}</title>
       <meta name="keywords" content="{{ meta_keywords }}" />
@@ -16,29 +17,29 @@
       <div class="wap">
          <div title="175GameCanteen" class="logo"><a href="/"><span>175Game' Canteen</span></a></div>
          <ul>
-            <li><a href="{% url food_index %}">Today Menu</a></li>
-            
+            <li><a href="{% url foods_index %}">Today Menu</a></li>
+
             {% if user.is_authenticated %}
             <li class="nav_item_my">
-                welcome <a href='{%  url my_account %}'>{{ user.name  }}</a>
+               <a href='{%  url my_account %}'>{{ user.username  }}</a>
             </li>
-            
+
             <li> 
-               <a href="{% url django.contrib.auth.views.logout %}">Logout</a>
+            <a href="{% url django.contrib.auth.views.logout %}">Logout</a>
             </li>
             {% else %}
             <li>
-               <a href="{% url register %}">Sign Up</a>
+            <a href="{% url register %}">Sign Up</a>
             </li>
 
             <li>
-               <a href="{% url django.contrib.auth.views.login %}">Login</a>
+            <a href="{% url django.contrib.auth.views.login %}">Login</a>
             {% endif %}
          </ul>
-         <!--<% if (locals.session.user.canOperateShop || locals.session.user.isAdmin) {%>-->
-         <!--<li><a href="/admin/">后台</a></li>-->
-         <!--<% } %>-->
-         <!--<% } %>-->
+
       </div>
       </nav>
       </header>
+
+      <div class="wap columns clearfix">
+

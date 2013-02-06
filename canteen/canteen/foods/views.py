@@ -1,7 +1,7 @@
 # Create your views here.
 from django.shortcuts import get_object_or_404, render_to_response
 from canteen.foods.models import Category, Food, FoodReview
-from canteen.foods.forms import ProductReviewForm
+from canteen.foods.forms import FoodReviewForm
 from django.template import RequestContext
 
 from django.core import urlresolvers
@@ -33,13 +33,15 @@ def index(request, template_name="foods/index.html"):
     lunch_foods = Food.active.filter(is_lunch=True,time_at=datetime.date.today())
     dinner_foods = Food.active.filter(is_lunch=False,time_at=datetime.date.today())
 
+    #import pdb
+    #pdb.set_trace()
     #TODO is_admin + template
 
     page_title = '175game canteen'
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def show_category(request, category_slug, template_name="catalog/category.html"):
+def show_category(request, category_slug, template_name="foods/category.html"):
     """ view for each individual category page """
     category_cache_key = request.path
     c = cache.get(category_cache_key)
@@ -55,7 +57,7 @@ def show_category(request, category_slug, template_name="catalog/category.html")
     #queries = connection.queries
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def show_product(request, product_slug, template_name="catalog/product.html"):
+def show_food(request, product_slug, template_name="catalog/product.html"):
     """ view for each product page """
     product_cache_key = request.path
     # try to get product from cache

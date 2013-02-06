@@ -1,10 +1,10 @@
 from django import forms
 from canteen.foods.models import Food, Category, FoodReview
 
-#class ProductAdminForm(forms.ModelForm):
-    #""" ModelForm class to validate product instance data before saving from admin interface """
-    #class Meta:
-        #model = Product
+class FoodAdminForm(forms.ModelForm):
+    """ ModelForm class to validate food instance data before saving from admin interface """
+    class Meta:
+        model = Food
 
     #def clean_price(self):
         #if self.cleaned_data['price'] <= 0:

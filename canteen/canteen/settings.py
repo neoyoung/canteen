@@ -4,7 +4,10 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 #local config
-PROJECT_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__).decode('utf-8')))
+import os
+PROJECT_DIR = os.path.dirname(
+    os.path.abspath(
+        os.path.dirname(__file__).decode('utf-8')))
 
 
 ADMINS = (
@@ -15,12 +18,15 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'canteen',                      # Or path to database file if using sqlite3.
-        'USER': 'canteen',                      # Not used with sqlite3.
-        'PASSWORD': 'canteen',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql',
+        # Or path to database file if using sqlite3.
+        'NAME': 'canteen',
+        'USER': 'canteen',  # Not used with sqlite3.
+        'PASSWORD': 'canteen',  # Not used with sqlite3.
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '',
+        'PORT': '',  # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -49,7 +55,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_DIR, '/media/')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -60,7 +66,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_DIR, '/static/')
+#STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -71,6 +77,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/home/zhkzyth/codeRep/canteen/canteen/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -78,7 +85,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -88,7 +95,7 @@ SECRET_KEY = 'jf2qbdt=@lsln%omah7e@_nc+#-lr(yr8)r-)!@#s(s9mh@d_q'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -110,10 +117,11 @@ ROOT_URLCONF = 'canteen.urls'
 WSGI_APPLICATION = 'canteen.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    #or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(CURRENT_PATH, 'templates'),
+    os.path.join(PROJECT_DIR, 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -127,15 +135,18 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-
+    #food taging
     'tagging',
-
+    #use to trace the sql
     'debug_toolbar',
-
     #foods
     'canteen.foods',
-
-    #'canteen.accounts',
+    #accounts management
+    'canteen.accounts',
+    #
+    'canteen.utils',
+    #
+    'canteen.order',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -173,55 +184,78 @@ INTERNAL_APPS = ('127.0.0.1',)
 
 #debug panel for configuration
 DEBUG_TOOLBAR_PANELS = (
-      'debug_toolbar.panels.version.VersionDebugPanel',
-      'debug_toolbar.panels.timer.TimerDebugPanel',
-      'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-      'debug_toolbar.panels.headers.HeaderDebugPanel',
-      'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-      'debug_toolbar.panels.template.TemplateDebugPanel',
-      'debug_toolbar.panels.sql.SQLDebugPanel',
-      'debug_toolbar.panels.signals.SignalDebugPanel',
-      'debug_toolbar.panels.logger.LoggingPanel',
-      )
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+    'debug_toolbar.panels.headers.HeaderDebugPanel',
+    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'debug_toolbar.panels.signals.SignalDebugPanel',
+    'debug_toolbar.panels.logger.LoggingPanel',
+)
 
 
 def custom_show_toolbar(request):
-   return True  # Always show toolbar, for example purposes only.
+    return True  # Always show toolbar, for example purposes only.
 
 DEBUG_TOOLBAR_CONFIG = {
-      'INTERCEPT_REDIRECTS': True,
-      'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-      #'EXTRA_SIGNALS': [''],
-      'HIDE_DJANGO_SQL': False,
-      'TAG': 'div',
-      'ENABLE_STACKTRACES' : True,
-      }
+    'INTERCEPT_REDIRECTS': True,
+    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+    #'EXTRA_SIGNALS': [''],
+    'HIDE_DJANGO_SQL': False,
+    'TAG': 'div',
+    'ENABLE_STACKTRACES': True,
+}
 
 #debug panel for configuration
 DEBUG_TOOLBAR_PANELS = (
-      'debug_toolbar.panels.version.VersionDebugPanel',
-      'debug_toolbar.panels.timer.TimerDebugPanel',
-      'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-      'debug_toolbar.panels.headers.HeaderDebugPanel',
-      'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-      'debug_toolbar.panels.template.TemplateDebugPanel',
-      'debug_toolbar.panels.sql.SQLDebugPanel',
-      'debug_toolbar.panels.signals.SignalDebugPanel',
-      'debug_toolbar.panels.logger.LoggingPanel',
-      )
-
-
-def custom_show_toolbar(request):
-   return True  # Always show toolbar, for example purposes only.
-
-DEBUG_TOOLBAR_CONFIG = {
-      'INTERCEPT_REDIRECTS': True,
-      'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-      #'EXTRA_SIGNALS': [''],
-      'HIDE_DJANGO_SQL': False,
-      'TAG': 'canteenENABLE_STACKTRACES' : True,
-      }
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+    'debug_toolbar.panels.headers.HeaderDebugPanel',
+    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'debug_toolbar.panels.signals.SignalDebugPanel',
+    'debug_toolbar.panels.logger.LoggingPanel',
+)
 
 
 #TODO try the ssh connection
 ENABLE_SSH = False
+
+
+#Context processor
+#add the meta info for fallback support
+
+
+# List of processors used by RequestContext to populate the context.
+# Each one should be a callable that takes the request object as its
+# only parameter and returns a dictionary to add to the context.
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    #    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+    #
+    'canteen.utils.context_processors.canteen'
+)
+
+#IF ENABLE SSL CONNECTION
+ENABLE_SSL = False
+
+#SITE NAME
+SITE_NAME = "175game Canteen"
+#META KEYWORD
+META_KEYWORDS = "canteen"
+#META_DESCRIPTION
+META_DESCRIPTION = "a canteen demo for 175game.And just enjoy.=)"
+
+
+#
+LOGIN_REDIRECT_URL = '/accounts/my_account/'

@@ -40,7 +40,7 @@ def register(request, template_name="registration/register.html"):
 def my_account(request, template_name="registration/my_account.html"):
     """ page displaying customer account information, past order list and account options """
     page_title = 'My Account'
-    orders = Order.objects.filter(user=request.user)
+    #orders = Order.objects.filter(user=request.user)
     name = request.user.username
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 

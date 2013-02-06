@@ -2,32 +2,21 @@
 
 {% block content %}
 
-<div class="wap columns clearfix">
 
    <div class="left">
-      <h1 class="page-title">帐号设置</h1>
+      <h1 class="page-title">My Account</h1>
       <section class="main clearfix inner">
       <!--TODO show the user food history-->
       <fieldset class="">
          <legend>foods History(coming soon)</legend>
-         <!--{% for order in orders %}-->
-         <!--<a href="{{ order.get_absolute_url }}">-->
-            <!--Order #{{ order.id }} - {{ order.date|date }}  (view)-->
-            <!--</a><br />-->
-         <!--{% empty %}-->
-         <!--You have no past orders.-->
-         <!--{% endfor %}-->
       </fieldset>
 
       <fieldset class="my_account">
          <legend>Account Settings</legend>
          <ul>
             <li><a href="{% url django.contrib.auth.views.password_change %}">Change Password</a></li>
-            <!--<li><a href="{% url order_info %}">Edit Billing/Shipping Information</a></li>-->
          </ul>
       </fieldset>
-
-
       </section>
    </div>
 
@@ -35,14 +24,11 @@
    <div class="right">
       <div class="block">
          <ul class="setting">
-            <!--<li><a href="/user/order">› 历史订单</a></li>-->
-            <li><a href="{{   }}">› 帐户设置</a></li>
+            <li><a href="#">› My History</a></li>
+            <li><a href="{% url my_account %}">› 帐户设置</a></li>
          </ul>
       </div>
    </div>
-
-
-</div>
 
 
 {% endblock %}

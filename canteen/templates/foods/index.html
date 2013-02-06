@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="left">
+   <h1 class="page-title">
+      <!--<strong><%=shop.name%></strong>-->
+      <!--<span>电话：<%=shop.tel%></span>-->
+      <!--<span>地址：<%=shop.address%></span>-->
+      <!--<input type="hidden" id="shop_id" value="<%=shop._id%>">-->
+      <!--<input type="hidden" id="shop_name" value="<%=shop.name%>">-->
+      <strong> Today Menu </strong>
+   </h1>
+   <section class="main clearfix">
+   <section class="food-list inner clearfix">
+
+   <div>
+      <div class="cat-title"><span>Lunch</span></div>
+      {% if  lunch_foods %}
+
+      <ul>
+         {% for food in lunch_foods %}
+         <li>
+
+         {{ food.name  }}
+
+         </li>
+
+         {% endfor %}
+
+      </ul>
+      {% else %}
+      <p>还未添加美食</p>
+      {% endif %}  
+   </div>
+
+   <div class="clearfix"></div>
+
+   <div>
+      <div class="cat-title"><span>Dinner</span></div>
+      {% if dinner_foods %}
+
+      <ul>
+         {% for food in dinner_foods %}
+         <li>
+
+         {{ food.name  }}
+
+         </li>
+
+         {% endfor %}
+
+      </ul>
+      {% else %}
+      <p>还未添加美食</p>
+      {% endif %}  
+   </div>
+
+
+   </section>
+   </section>
+
+</div>
+
+
+<div class="right">
+   <section id="orders">
+   <h3>我的订餐</h3>
+
+   <div class="r_mycart"></div>
+
+   <div class="buy"><span class="buy-btn">定午餐</span></div>
+   <div class="buy"><span class="buy-btn">定晚餐</span></div>
+   <div class="buy"><span class="buy-btn">两餐都要！</span></div>
+
+   </section>
+</div>
+
+{% endblock %}
+

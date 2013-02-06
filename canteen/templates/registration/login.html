@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 {% if form.errors %}
 	<ul class="errorlist">
 		<li>You entered an invalid username or password.</li>
@@ -25,5 +26,7 @@
 	</tr>
 </table>
 <input type="hidden" name="next" value="{{ next }}" />
+{% csrf_token %}
 </form>
+
 {% endblock %}
