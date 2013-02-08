@@ -53,7 +53,7 @@ class Order(BaseOrderInfo):
     )
 
     #order info
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField()
     order_type = models.IntegerField(choices=ORDER_TYPE, default=BOTH)
     is_active = models.BooleanField(default=True)
     ip_address = models.IPAddressField(blank=True)

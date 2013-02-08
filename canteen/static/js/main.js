@@ -43,13 +43,13 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
     //console.log('hello world!');
    $(document).ready(function() {
       $('body').bind('click', function () {
-         $.get("/order/test", function(data) {
-            if (data.fact_type=="T") {
-            guess_result="This fact is true! " + data.fact_note;
+         $.get("/order/get_order", function(data) {
+            if (data.status) {
+               console.log("show the data");
             } else {
-            guess_result="This fact is false! " + data.fact_note;
+               console.log("hide the data");
             }
-            $('body')[0].innerHTML=guess_result;
+            //$('body')[0].innerHTML=guess_result;
             });
          });
       });
