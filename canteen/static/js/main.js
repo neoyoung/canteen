@@ -34,23 +34,20 @@ require.config({
 	}
 });
 
-
 // Start the main app logic.
 requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
-   function ($) {
-    //jQuery, canvas and the app/sub module are all
-    //loaded and can be used here now.
-    //console.log('hello world!');
-   $(document).ready(function() {
-      $('body').bind('click', function () {
-         $.get("/order/get_order", function(data) {
-            if (data.status) {
-               console.log("show the data");
-            } else {
-               console.log("hide the data");
-            }
-            //$('body')[0].innerHTML=guess_result;
+      function ($) {
+
+      //TODO order CRUD
+      $(document).ready(function() {
+         $('body').bind('click', function () {
+            $.get("/order/",function(data) {
+               if (data.status) {
+                  console.log("show the data");
+               } else {
+                  console.log("hide the data");
+               }
+               });
             });
          });
       });
-});

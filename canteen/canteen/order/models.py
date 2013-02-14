@@ -1,8 +1,19 @@
 from django.db import models
 #from django import forms
 from django.contrib.auth.models import User
+from django.utils import timezone
 #from canteen.foods.models import Food
 #import decimal
+#import time
+#import datetime
+
+
+#class CST(datetime.tzinfo):
+    #def utcoffset(self, dt):
+        #return datetime.timedelta(hours=+8)
+
+    #def dst(self, dt):
+        #return datetime.timedelta(0)
 
 
 class BaseOrderInfo(models.Model):
@@ -13,24 +24,6 @@ class BaseOrderInfo(models.Model):
     #contact info
     email = models.EmailField(max_length=50, blank=True)
     phone = models.CharField(max_length=20, blank=True)
-
-    #shipping information
-    #shipping_name = models.CharField(max_length=50)
-    #shipping_address_1 = models.CharField(max_length=50)
-    #shipping_address_2 = models.CharField(max_length=50, blank=True)
-    #shipping_city = models.CharField(max_length=50)
-    #shipping_state = models.CharField(max_length=2)
-    #shipping_country = models.CharField(max_length=50)
-    #shipping_zip = models.CharField(max_length=10)
-
-    #billing information
-    #billing_name = models.CharField(max_length=50)
-    #billing_address_1 = models.CharField(max_length=50)
-    #billing_address_2 = models.CharField(max_length=50, blank=True)
-    #billing_city = models.CharField(max_length=50)
-    #billing_state = models.CharField(max_length=2)
-    #billing_country = models.CharField(max_length=50)
-    #billing_zip = models.CharField(max_length=10)
 
 
 class Order(BaseOrderInfo):
@@ -47,13 +40,14 @@ class Order(BaseOrderInfo):
 
     # set of possible order statuses
     ORDER_TYPE = (
-        (LUNCH, 'lunch'),
-        (DINNER, 'dinner'),
-        (BOTH, 'both'),
+                 (LUNCH, 'lunch'),
+                 (DINNER, 'dinner'),
+                 (BOTH, 'both'),
     )
 
     #order info
-    date = models.DateTimeField()
+    #date = models.DateTimeField(default=datetime.datetime.now(CST()))
+    date = models.DateTimeField(default=timezone.now())
     order_type = models.IntegerField(choices=ORDER_TYPE, default=BOTH)
     is_active = models.BooleanField(default=True)
     ip_address = models.IPAddressField(blank=True)

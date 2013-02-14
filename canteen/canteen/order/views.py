@@ -14,30 +14,71 @@ import time
 import datetime
 
 
-def testJson(request):
-    message = {"fact_type": "", "fact_note": ""}
-    if request.is_ajax():
-        message['fact_note'] = "wahahahahah"
-    else:
-        message = "You're the lying type, I can just tell."
-    json = simplejson.dumps(message)
-    return HttpResponse(json, mimetype='application/json')
-
-
 #@login_required
 #@ajax_required
 def update_order(request, order_id):
     """ update user order """
-    result = {'status': 0, }
+    postdata = request.POST.copy()
+    response = {'success': 'True'}
 
-    today = datetime.date.
+    #is_active = postdata.active
+    #time_at   = postdata.time_at
+
+    order_type = postdata.type
+    today = datetime.date.today()
+
+    #update
+    orderSet = Order.objects.filter(date__year=today.year,
+                                    date__month=today.month,
+                                    date__day=today.day,
+                                    user=request.user)
+
+    if orderSet:
+        order = orderSet[0]
+        order.order_type = order_type
+        order.save()
+        #response.update({""})
+    else:
+        #create a new one?
+        response.update({'success': 'False'})
+
+    response = simplejson.dumps(response)
+    return HttpResponse(response, mimetype='application/json')
 
 
 #@login_required
 #@ajax_required
-def create_order(request):
-    """ create the order today """
-    result = {'status': 0, }
+def add_order(request):
+    """ create user order """
+    postdata = request.POST.copy()
+    response = {'success': 'True'}
+
+    #is_active = postdata.active
+    #time_at   = postdata.time_at
+
+    order_type = postdata.order_type
+    today = datetime.date.today()
+
+    #update
+    orderSet = Order.objects.filter(date__year=today.year,
+                                    date__month=today.month,
+                                    date__day=today.day,
+                                    user=request.user)
+
+    if orderSet:
+        #exit one ,just update it
+        update_order(request)
+    else:
+        #add one!
+        order = Order()
+        order.order_type = order_type
+        order.user = request.user
+        #order.ip_address =
+
+        response.update({'success': 'False'})
+
+    response = simplejson.dumps(response)
+    return HttpResponse(response, mimetype='application/json')
 
 
 def get_order(request):

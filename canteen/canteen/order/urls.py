@@ -4,9 +4,8 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     'canteen.order.views',
     url(r'^$', 'get_order', {}, 'get_order'),
-    url(r'^order/(?P<order_id>[\d]+)/$',
+    url(r'^(?P<order_id>[\d]+)/$',
         'update_order', {}, 'update_order'),
-    url(r'test/', 'testJson', {}, 'testJson'),
-    url(r'get_order/', 'get_order', {}, 'test'),
-
+    url(r'^add/$',
+        'add_order', {}, 'add_order'),
 )

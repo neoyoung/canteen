@@ -8,7 +8,7 @@
       <title>{% block title %}{% if page_title %}{{ page_title }} - {% endif %}{{ site_name }}{% endblock %}</title>
       <meta name="keywords" content="{{ meta_keywords }}" />
       <meta name="description" content="{{ meta_description }}" />
-      <meta name="verify-v1" content="bPjaC6MIttNNSgZfZXROVZ4RPbKJkyv7rAM2sOuUWk0=" />	
+      <meta name="verify-v1" content="bPjaC6MIttNNSgZfZXROVZ4RPbKJkyv7rAM2sOuUWk0=" /> 
    </head>
 
    <body>
@@ -17,7 +17,7 @@
       <div class="wap">
          <div title="175GameCanteen" class="logo"><a href="/"><span>175Game' Canteen</span></a></div>
          <ul>
-            <li><a href="{% url foods_index %}">Today Menu</a></li>
+            <li><a href="{% url foods.views.index %}">Today Menu</a></li>
 
             {% if user.is_authenticated %}
             <li class="nav_item_my">

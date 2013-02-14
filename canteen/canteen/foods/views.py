@@ -23,6 +23,7 @@ import datetime
 #from django.core.cache import cache
 #from ecomstore.settings import CACHE_TIMEOUT
 
+
 def index(request, template_name="foods/index.html"):
     """ site home page """
     #search_recs = stats.recommended_from_search(request)
@@ -30,8 +31,10 @@ def index(request, template_name="foods/index.html"):
     #recently_viewed = stats.get_recently_viewed(request)
     #view_recs = stats.recommended_from_views(request)
 
-    lunch_foods = Food.active.filter(is_lunch=True,time_at=datetime.date.today())
-    dinner_foods = Food.active.filter(is_lunch=False,time_at=datetime.date.today())
+    lunch_foods = Food.active.filter(is_lunch=True,
+                                     time_at=datetime.date.today())
+    dinner_foods = Food.active.filter(is_lunch=False,
+                                      time_at=datetime.date.today())
 
     #import pdb
     #pdb.set_trace()
@@ -39,7 +42,9 @@ def index(request, template_name="foods/index.html"):
 
     page_title = '175game canteen'
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+                              context_instance=RequestContext(request))
+
 
 def show_category(request, category_slug, template_name="foods/category.html"):
     """ view for each individual category page """
@@ -55,7 +60,9 @@ def show_category(request, category_slug, template_name="foods/category.html"):
 
     #from django.db import connection
     #queries = connection.queries
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+                              context_instance=RequestContext(request))
+
 
 def show_food(request, product_slug, template_name="catalog/product.html"):
     """ view for each product page """
@@ -94,34 +101,49 @@ def show_food(request, product_slug, template_name="catalog/product.html"):
     request.session.set_test_cookie()
     stats.log_product_view(request, p)
     # product review additions, CH 10
-    product_reviews = ProductReview.approved.filter(product=p).order_by('-date')
+    product_reviews = ProductReview.approved.filter(
+        product=p).order_by('-date')
     review_form = ProductReviewForm()
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+                              context_instance=RequestContext(request))
+
 
 def tag_cloud(request, template_name="catalog/tag_cloud.html"):
-    """ view containing a list of tags for active products, sized proportionately by relative
-    frequency
+    """ view containing a list of tags for active products,
+        sized proportionately by relative
+        frequency
     """
-    product_tags = Tag.objects.cloud_for_model(Product, steps=9,
-                                               distribution=tagging.utils.LOGARITHMIC,
-                                               filters={'is_active': True })
+    product_tags = Tag.objects.cloud_for_model(
+        Product, steps=9,
+        distribution=tagging.utils.LOGARITHMIC,
+        filters={'is_active': True})
+
     page_title = 'Product Tag Cloud'
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name,
+                              locals(),
+                              context_instance=RequestContext(request))
+
 
 def tag(request, tag, template_name="catalog/tag.html"):
     """ view listing products that have been tagged with a given tag """
     products = TaggedItem.objects.get_by_model(Product.active, tag)
     page_title = 'Products tagged with ' + tag
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name,
+                              locals(),
+                              context_instance=RequestContext(request))
 
 
 @login_required
 def add_review(request):
-    """ AJAX view that takes a form POST from a user submitting a new product review;
-    requires a valid product slug and args from an instance of ProductReviewForm;
-    return a JSON response containing two variables: 'review', which contains
-    the rendered template of the product review to update the product page,
-    and 'success', a True/False value indicating if the save was successful.
+    """ AJAX view that takes a form POST from a user submitting
+        a new product review;
+        requires a valid product slug and args from an instance of
+        ProductReviewForm;
+        return a JSON response containing two variables: 'review', which
+        contains the rendered template of the product review
+        to update the product page,
+        and 'success', a True/False value indicating
+        if the save was successful.
     """
     form = ProductReviewForm(request.POST)
     if form.is_valid():
@@ -133,36 +155,39 @@ def add_review(request):
         review.save()
 
         template = "catalog/product_review.html"
-        html = render_to_string(template, {'review': review })
-        response = simplejson.dumps({'success':'True', 'html': html})
+        html = render_to_string(template, {'review': review})
+        response = simplejson.dumps({'success': 'True', 'html': html})
 
     else:
         html = form.errors.as_ul()
-        response = simplejson.dumps({'success':'False', 'html': html})
+        response = simplejson.dumps({'success': 'False', 'html': html})
     return HttpResponse(response,
                         content_type='application/javascript; charset=utf-8')
 
+
 @login_required
 def add_tag(request):
-    """ AJAX view that takes a form POST containing variables for a new product tag;
-    requires a valid product slug and comma-delimited tag list; returns a JSON response
-    containing two variables: 'success', indicating the status of save operation, and 'tag',
-    which contains rendered HTML of all product pages for updating the product page.
+    """ AJAX view that takes a form POST containing
+        variables for a new product tag;
+        requires a valid product slug and comma-delimited tag list;
+        returns a JSON response containing two variables: 'success',
+        indicating the status of save operation, and 'tag',
+        which contains rendered HTML of all product pages
+        for updating the product page.
     """
-    tags = request.POST.get('tag','')
-    slug = request.POST.get('slug','')
+    tags = request.POST.get('tag', '')
+    slug = request.POST.get('slug', '')
     if len(tags) > 2:
         p = Product.active.get(slug=slug)
         html = u''
         template = "catalog/tag_link.html"
         for tag in tags.split():
             tag.strip(',')
-            Tag.objects.add_tag(p,tag)
+            Tag.objects.add_tag(p, tag)
         for tag in p.tags:
-            html += render_to_string(template, {'tag': tag })
-        response = simplejson.dumps({'success':'True', 'html': html })
+            html += render_to_string(template, {'tag': tag})
+        response = simplejson.dumps({'success': 'True', 'html': html})
     else:
-        response = simplejson.dumps({'success':'False'})
+        response = simplejson.dumps({'success': 'False'})
     return HttpResponse(response,
                         content_type='application/javascript; charset=utf-8')
-
