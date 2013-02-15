@@ -40,14 +40,38 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
 
       //TODO order CRUD
       $(document).ready(function() {
+         
          $('body').bind('click', function () {
             $.get("/order/",function(data) {
-               if (data.status) {
+               if (data.success === 'True') {
                   console.log("show the data");
                } else {
                   console.log("hide the data");
                }
                });
             });
+
+         $('#lunch').bind('click', function () {
+            $.post("/order/add/",{order_type:1},function(data) {
+               console.log(data);
+               if (data.success === 'True') {
+                  console.log("add success");
+               } else {
+                  console.log("not work");
+               }
+               });
+            });
+
+         $('#cancel-btn').bind('click', function () {
+            $.post("/order/delete/",{},function(data) {
+               if (data.status) {
+                  console.log("delete success");
+               } else {
+                  console.log("not work");
+               }
+               });
+            });
+
+
          });
       });

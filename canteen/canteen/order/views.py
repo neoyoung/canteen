@@ -5,18 +5,18 @@ from django.core import urlresolvers
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.utils import simplejson, timezone
-
+from django.views.decorators.csrf import csrf_exempt
 #
 from canteen.order.models import Order
 
 #import
-import time
+#import time
 import datetime
 
 
 #@login_required
 #@ajax_required
-def update_order(request, order_id):
+def update_order(request, order_id=''):
     """ update user order """
     postdata = request.POST.copy()
     response = {'success': 'True'}
@@ -24,18 +24,24 @@ def update_order(request, order_id):
     #is_active = postdata.active
     #time_at   = postdata.time_at
 
-    order_type = postdata.type
-    today = datetime.date.today()
+    #today = datetime.date.today()
 
+    from datetime import timedelta
+
+    start_date = timezone.now().date()
+    end_date = start_date + timedelta(days=1)
+    orderSet = Order.objects.filter(date__range=(start_date, end_date))
     #update
-    orderSet = Order.objects.filter(date__year=today.year,
-                                    date__month=today.month,
-                                    date__day=today.day,
-                                    user=request.user)
+    #orderSet = Order.objects.filter(date__year=today.year,
+                                    #date__month=today.month,
+                                    #date__day=today.day,
+                                    ##user=request.user)[0:1].get()
+                                    #user=request.user)
 
+    #time range
     if orderSet:
         order = orderSet[0]
-        order.order_type = order_type
+        order.order_type = postdata['order_type']
         order.save()
         #response.update({""})
     else:
@@ -48,15 +54,16 @@ def update_order(request, order_id):
 
 #@login_required
 #@ajax_required
+@csrf_exempt
 def add_order(request):
     """ create user order """
     postdata = request.POST.copy()
-    response = {'success': 'True'}
+    #print postdata
+    response = {'success': 'False'}
 
     #is_active = postdata.active
     #time_at   = postdata.time_at
 
-    order_type = postdata.order_type
     today = datetime.date.today()
 
     #update
@@ -71,11 +78,13 @@ def add_order(request):
     else:
         #add one!
         order = Order()
-        order.order_type = order_type
+        order.order_type = postdata['order_type']
         order.user = request.user
-        #order.ip_address =
+        #tmp hack the ip_address
+        order.ip_address = ''
+        order.save()
 
-        response.update({'success': 'False'})
+        response.update({'success': 'True'})
 
     response = simplejson.dumps(response)
     return HttpResponse(response, mimetype='application/json')
@@ -104,6 +113,10 @@ def get_order(request):
         return HttpResponse(json, mimetype='application/json')
     else:
         return HttpResponseRedirect('/')
+
+
+def delete_order(request):
+    pass
 
 
 def ajax_required(request, fn):
