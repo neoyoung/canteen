@@ -2,23 +2,16 @@
 
 {% block content %}
 
-<div class="left">
-   <h1 class="page-title">
-      <!--<strong><%=shop.name%></strong>-->
-      <!--<span>电话：<%=shop.tel%></span>-->
-      <!--<span>地址：<%=shop.address%></span>-->
-      <!--<input type="hidden" id="shop_id" value="<%=shop._id%>">-->
-      <!--<input type="hidden" id="shop_name" value="<%=shop.name%>">-->
-      <strong> Today Menu </strong>
+<div class="span6">
+   <h1 class="">
+      今日菜式
    </h1>
-   <section class="main clearfix">
-   <section class="food-list inner clearfix">
 
    <div>
-      <div class="cat-title"><span>Lunch</span></div>
+      <h4>Lunch</h4>
       {% if  lunch_foods %}
 
-      <ul>
+      <ul class="inline food-list">
          {% for food in lunch_foods %}
          <li>
 
@@ -34,13 +27,13 @@
       {% endif %}  
    </div>
 
-   <div class="clearfix"></div>
+   <hr>
 
    <div>
-      <div class="cat-title"><span>Dinner</span></div>
+      <h4>Dinner</h4>
       {% if dinner_foods %}
 
-      <ul>
+      <ul class="inline food-list">
          {% for food in dinner_foods %}
          <li>
 
@@ -56,38 +49,52 @@
       {% endif %}  
    </div>
 
-
-   </section>
-   </section>
-
 </div>
 
 
-<div class="right">
-   <section id="orders">
-   <h3>我的订餐</h3>
+<div class="span2 offset2">
 
-   <div class="r_mycart"></div>
+   <form id="ship-form">
+      <fieldset>
+         <legend>我的订餐</legend>
 
-   <div>
+         <div class="js-container">
+            <label class="radio">
+               <input type="radio" name="order_type" id="order_type_1" value="1" >午餐
+            </label>
 
-      <form>
-         <input type="radio" name="sex" value="1" /> 午餐
-         <br />
-         <input type="radio" name="sex" value="female" /> 晚餐
-         <br />
-         <input type="radio" name="sex" value="female" /> 两餐
-         
-         <input type="submit" name="submit" value="确定" id='submit'/>
+            <label class="radio">
+               <input type="radio" name="order_type" id="order_type_2" value="2">晚餐
+            </label>
 
-      </form>
+            <label class="radio">
+               <input type="radio" name="order_type" id="order_type_3" value="3" checked>两餐
+            </label>
+         </div>
 
-   </div>
-   <!--<div class="buy"><span class="buy-btn" id="cancel">定晚餐</span></div>-->
-   <!--<div class="buy"><span class="buy-btn" id="both">两餐都要！</span></div>-->
+         <div class="js-msg"></div>
 
-   </section>
+         <button type="submit" class="btn btn-small btn-primary float-r" id="ship">确定</button>
+      </fieldset>
+   </form>
+
 </div>
+
+<div id="success-confirm" class="reveal-modal">
+</div>
+
 
 {% endblock %}
 
+{% block  css %}
+<link href="{{ STATIC_URL  }}css/index.css" rel="stylesheet" type="text/css"/>
+<link href="{{ STATIC_URL  }}css/reveal.css" rel="stylesheet" type="text/css"/>
+
+{% endblock %}
+
+
+{% block script %}
+
+<script type="text/javascript" data-main="{{ STATIC_URL  }}js/main" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
+
+{% endblock %}

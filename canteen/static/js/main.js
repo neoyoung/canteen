@@ -45,7 +45,7 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
 
                var cookieValue = null;
 
-               if (document.cookie && document.cookie !='') {
+               if (document.cookie && document.cookie !=='') {
 
                   var cookies = document.cookie.split(';');
 
@@ -81,39 +81,55 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
 
          });
 
-         //TODO order CRUD
          $(document).ready(function() {
 
-            $('body').bind('click', function () {
-               $.get("/order/",function(data) {
-                  if (data.success === 'True') {
-                     console.log("show the data");
-                  } else {
-                     console.log("hide the data");
-                  }
-               });
-            });
+               var subBtn = $('#ship'),
+                   success = $('#ship-form .js-msg'),
+                   radioContainer = $('#ship-form .js-container');
 
-            $('#lunch').bind('click', function () {
-               $.post("/order/add/",{order_type:1},function(data) {
-                  console.log(data);
-                  if (data.success === 'True') {
-                     console.log("add success");
-                  } else {
-                     console.log("not work");
-                  }
-               });
-            });
+               $('#ship').bind('click', function () {
 
-            $('#cancel').bind('click', function () {
-               $.post("/order/delete/",{},function(data) {
-                  if (data.success === 'True') {
-                     console.log("delete success");
-                  } else {
-                     console.log("not work");
-                  }
-               });
-            });
+                  var val = $('#ship-form').find('input[name="order_type"]:checked').val(),
+                  data = {order_type: val},
+                  msg;
 
+                  $.post("/order/add/",data,function(data) {
+
+                     //radioContainer.hide();
+
+                     if (data.success === 'True') {
+                        //success.html('已经订餐. =)');
+                        //subBtn.addClass("disabled");
+                        msg = "<h4>订餐成功啦~</h4><p>去围观下今天谁拿第一哇.=)</p><a class='close-reveal-modal'>&#215;</a>";
+
+                     } else {
+
+                        msg = "<h4>貌似出问题了，上水群找下管理猿吧=(</h4><a class='close-reveal-modal'>&#215;</a>";
+                     }
+
+                     $('#success-confirm').empty().html(msg)
+                                        .reveal({animation: 'fadeAndPop',
+                                                 animationspeed: 300,
+                                                 closeonbackgroundclick: false,
+                                                 dismissmodalclass: 'close-reveal-modal'
+                                               });
+                     });
+
+                  $(this).attr('disabled', 'disabled');
+
+                  return false;
+
+                  });
+
+               //TODO support the cancel action
+               //$('#cancel').bind('click', function () {
+                     //$.post("/order/delete/",{},function(data) {
+                        //if (data.success === 'True') {
+                        //console.log("delete success");
+                        //} else {
+                        //console.log("not work");
+                        //}
+                        //});
+                     //});
          });
       });
