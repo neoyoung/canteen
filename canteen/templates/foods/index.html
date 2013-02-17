@@ -87,14 +87,13 @@
 {% endblock %}
 
 {% block  css %}
-<link href="{{ STATIC_URL  }}css/index.css" rel="stylesheet" type="text/css"/>
-<link href="{{ STATIC_URL  }}css/reveal.css" rel="stylesheet" type="text/css"/>
-
+   <link href="{{ STATIC_URL  }}css/page/home.css" rel="stylesheet" type="text/css"/>
+   <link href="{{ STATIC_URL  }}css/widget/reveal.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 
 {% block script %}
 
-<script type="text/javascript" data-main="{{ STATIC_URL  }}js/main" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
+   <script type="text/javascript" data-main="{{ STATIC_URL  }}js/page/home" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
 
 {% endblock %}

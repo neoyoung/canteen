@@ -28,64 +28,23 @@ require.config({
          }
    },
 	paths: {
-		jquery: 'lib/jquery/jquery',
-        jqueryReveal:'lib/jquery/jquery.reveal',
-        bootstrap:'lib/bootstrap/bootstrap.min'
+		jquery: '../lib/jquery/jquery',
+        jqueryReveal:'../lib/jquery/jquery.reveal',
+        bootstrap:'../lib/bootstrap/bootstrap.min'
 	}
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
-      function ($) {
+requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
+      function ($,jqueryReveal,bootstrap,base,User) {
 
-      //solve the csrf validate
-         $('html').ajaxSend(function(event, xhr, settings) {
-
-            function getCookie(name) {
-
-               var cookieValue = null;
-
-               if (document.cookie && document.cookie !=='') {
-
-                  var cookies = document.cookie.split(';');
-
-                  for (var i = 0; i < cookies.length; i++) {
-
-                     var cookie = $.trim(cookies[i]);
-
-                     // Does this cookie string begin with the name we want?
-
-                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
-
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-
-                        break;
-
-                     }
-
-                  }
-
-               }
-
-               return cookieValue;
-
-            }
-
-            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-
-               // Only send the token to relative URLs i.e. locally.
-
-               xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-
-            }
-
-         });
-
-         $(document).ready(function() {
+         $(function() {
 
                var subBtn = $('#ship'),
                    success = $('#ship-form .js-msg'),
-                   radioContainer = $('#ship-form .js-container');
+                   radioContainer = $('#ship-form .js-container'),
+                   user = new User();
+
 
                $('#ship').bind('click', function () {
 
@@ -93,13 +52,16 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap'],
                   data = {order_type: val},
                   msg;
 
+                  if ( !user.isLogin() ) {
+                     //redirect to the login page
+                     window.location = '/accounts/login';
+                     return false;
+                  }
+
                   $.post("/order/add/",data,function(data) {
 
-                     //radioContainer.hide();
-
                      if (data.success === 'True') {
-                        //success.html('已经订餐. =)');
-                        //subBtn.addClass("disabled");
+                        
                         msg = "<h4>订餐成功啦~</h4><p>去围观下今天谁拿第一哇.=)</p><a class='close-reveal-modal'>&#215;</a>";
 
                      } else {

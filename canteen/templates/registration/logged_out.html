@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1>You've Logged Out!</h1>
+<div id="good-bye" >
+   <img src="{{  STATIC_URL }}img/time-to-say-goodbye-small-very.jpg" alt="good-bye" />
+   <h4>登出啦~下次再见 =)</h4>
+
+</div>
 {% endblock %}
+
+{% block css %}
+<style type="text/css">
+#good-bye{
+   text-align:center;
+   padding-top:60px;
+}
+</style>
+{% endblock  %}

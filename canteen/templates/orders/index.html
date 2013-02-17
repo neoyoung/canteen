@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load order_extra %}
+
+{% block content %}
+<table class="table table-striped {% if not orderList %} empty {% endif %}" summary="Today order list" id="order_list">
+   
+   <caption>今天订单列表</caption>
+   <thead>
+      <tr>
+         <th>#</th>
+         <th>大名</th>
+         <th>订餐类型</th>
+         <th>时间</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for order in orderList %}
+         <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.order_type|switchType}}</td>
+            <td>{{ order.date|date:"H:s a" }}</td>
+         </tr>
+      {% empty %}
+          <tr>
+             <td colspan="4" >
+                <span class="muted">貌似还没有人订餐</span> <a href="/" >去定个吧=)</a>
+             </td>
+         </tr>
+      {% endfor %}
+
+
+      </tbody>
+   </table>
+   {% endblock %}
+
+
+   {% block  css %}
+   <link href="{{ STATIC_URL  }}css/page/order.css" rel="stylesheet" type="text/css"/>
+   {% endblock %}
+
+
+   {% block script %}
+
+   <!--<script type="text/javascript" data-main="{{ STATIC_URL  }}js/page/order.js" src="{{ STATIC_URL }}js/lib/require/require.js"></script>-->
+
+   {% endblock %}

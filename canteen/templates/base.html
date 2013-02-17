@@ -4,9 +4,9 @@
    <head>
       <meta charset="UTF-8">
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet" media="screen">
+      <link href="{{ STATIC_URL }}css/widget/bootstrap.css" rel="stylesheet" media="screen">
       <!--<link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet" media="screen">-->
-      <link href="{{ STATIC_URL  }}css/base.css" rel="stylesheet" type="text/css"/>
+      <link href="{{ STATIC_URL  }}css/basic/base.css" rel="stylesheet" type="text/css"/>
 
 
       {% block css %}{% endblock %}
@@ -27,23 +27,25 @@
          <a href="/" class="brand">175Game' Canteen</a>
          <div class="nav-collapse collapse">
             <ul class="nav">
-               <li class="active"><a href="{% url foods.views.index %}">Today Menu</a></li>
+               <li class=""><a href="{% url foods.views.index %}">今日菜单</a></li>
+
+               <li class=""><a href="{% url order.views.list_order %}">订餐列表</a></li>
 
                {% if user.is_authenticated %}
                <li class="">
-               <a href='{%  url my_account %}'>{{ user.username  }}</a>
+                  <a href='{%  url my_account %}' id="username">{{ user.username  }}</a>
                </li>
 
                <li> 
-               <a href="{% url django.contrib.auth.views.logout %}">Logout</a>
+               <a href="{% url django.contrib.auth.views.logout %}">退出</a>
                </li>
                {% else %}
                <li>
-               <a href="{% url register %}">Sign Up</a>
+               <a href="{% url register %}">注册</a>
                </li>
 
                <li>
-               <a href="{% url django.contrib.auth.views.login %}">Login</a>
+               <a href="{% url django.contrib.auth.views.login %}">登录</a>
                {% endif %}
             </ul>
          </div>
@@ -56,20 +58,19 @@
          <div class="container content"> 
 
 
-<!--body-->
-{% block content %}{% endblock %}
+            <!--body-->
+            {% block content %}{% endblock %}
 
-<!--footer-->
-</div> <!-- end of wrapper div-->
-</div>
-<footer id="footer" class="">
-<div class="container">
-   <p class="muted credit float-r">created by zhkzyth,inspired by todomvc+canku+Django_Ecomerce</p>
-</div>
-</footer>
-<!--js-->
-<!--<script type="text/javascript" data-main="{{ STATIC_URL  }}js/main" src="{{ STATIC_URL }}js/lib/require/require.js"></script>-->
-{% block script %}{% endblock %}
-</body>
+            <!--footer-->
+         </div> <!-- end of wrapper div-->
+      </div>
+      <footer id="footer" class="">
+      <div class="container">
+         <p class="muted credit float-r">created by zhkzyth,inspired by todomvc+canku+Django_Ecomerce</p>
+      </div>
+      </footer>
+      <!--js-->
+      {% block script %}{% endblock %}
+   </body>
 </html>
 

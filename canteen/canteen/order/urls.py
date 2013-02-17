@@ -9,5 +9,7 @@ urlpatterns = patterns(
     url(r'^add/$',
         'add_order', {}, 'add_order'),
     url(r'^delete/$', 'delete_order',
-        {}, 'delete_order')
+        {}, 'delete_order'),
+    url(r'^list/$', 'list_order',
+        {}, 'list_order'),
 )

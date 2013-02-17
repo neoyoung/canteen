@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.utils import simplejson, timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
 
 from datetime import timedelta
 import datetime
@@ -13,8 +15,7 @@ import datetime
 from canteen.order.models import Order
 
 
-
-#@login_required
+@login_required
 #@ajax_required
 def update_order(request, order_id=''):
     """ update user order """
@@ -31,7 +32,6 @@ def update_order(request, order_id=''):
         order = orderSet[0]
         order.order_type = postdata['order_type']
         order.save()
-        #response.update({""})
     else:
         #create a new one?
         response.update({'success': 'False'})
@@ -40,7 +40,7 @@ def update_order(request, order_id=''):
     return HttpResponse(response, mimetype='application/json')
 
 
-#@login_required
+@login_required
 #@ajax_required
 #@csrf_exempt
 def add_order(request):
@@ -74,7 +74,7 @@ def add_order(request):
 
 
 def get_order(request):
-    """ get order of today """
+    """ get user's today order"""
     result = {'success': 'False'}
 
     if request.is_ajax():
@@ -86,7 +86,7 @@ def get_order(request):
         #print orderSet
         if orderSet:
             result.update({'success': 'True',
-                'order_type': orderSet[0].order_type})
+                           'order_type': orderSet[0].order_type})
         result = simplejson.dumps(result)
         return HttpResponse(result, mimetype='application/json')
     else:
@@ -94,7 +94,7 @@ def get_order(request):
 
 
 def delete_order(request):
-    response = {'success':'True'}
+    response = {'success': 'True'}
 
     start_date = timezone.now().date()
     end_date = start_date + timedelta(days=1)
@@ -105,7 +105,7 @@ def delete_order(request):
         #exit one ,just update it
         orderSet[0].delete()
     else:
-        response.update({'success': 'False', 'msg':'item not exit'})
+        response.update({'success': 'False', 'msg': 'item not exit'})
 
     response = simplejson.dumps(response)
     return HttpResponse(response, mimetype='application/json')
@@ -115,3 +115,13 @@ def delete_order(request):
 def ajax_required(request, fn):
     """ a ajax request helper as a decoractor """
     pass
+
+
+def list_order(request, template_name="orders/index.html"):
+    """ list today orders"""
+    start_date = timezone.now().date()
+    end_date = start_date + timedelta(days=1)
+    orderList = Order.objects.filter(date__range=(start_date, end_date))
+
+    return render_to_response(template_name, locals(),
+                              context_instance=RequestContext(request))

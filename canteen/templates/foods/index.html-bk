@@ -1,7 +1,0 @@
-{% extends "base.html" %}
-
-<!--{% load catalog_tags %}-->
-
-{% block content %}
-
-{% endblock %}

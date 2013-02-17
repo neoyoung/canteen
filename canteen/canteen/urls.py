@@ -1,15 +1,16 @@
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import patterns, include, url
-import os
-import settings
+#import os
+#import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    #bussiness logic
-    #url(r'^$', 'canteen.views.home', name='home'),
+urlpatterns = patterns(
+    '',
+    # bussiness logic
+    # url(r'^$', 'canteen.views.home', name='home'),
 
     url(r'^$', include('canteen.foods.urls')),
 
