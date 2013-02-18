@@ -1,4 +1,5 @@
-# Django settings for canteen project.
+#!/usr/bin/env python
+# encoding: utf-8
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -39,7 +40,7 @@ TIME_ZONE = 'Asia/Chongqing'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 #LANGUAGE_CODE = 'en-us'
-#LANGUAGE_CODE = 'zh_CN'
+#LANGUAGE_CODE = 'zh-cn'
 
 LANGUAGES = (
     ('zh-cn', u'简体中文'),  # instead of 'zh-CN'
@@ -114,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
