@@ -38,7 +38,17 @@ TIME_ZONE = 'Asia/Chongqing'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'zh_CN'
+
+LANGUAGES = (
+    ('zh-cn', u'简体中文'),  # instead of 'zh-CN'
+    ('zh-tw', u'繁體中文'),  # instead of 'zh-TW'
+)
+
+LOCALE_PATHS = (
+    '/home/zhkzyth/codeRep/canteen/canteen/locale/',
+)
 
 SITE_ID = 1
 
@@ -147,6 +157,8 @@ INSTALLED_APPS = (
     'canteen.utils',
     #
     'canteen.order',
+    #
+    'canteen.remember_me',
 )
 
 # A sample logging configuration. The only tangible logging

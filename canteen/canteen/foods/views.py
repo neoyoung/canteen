@@ -36,10 +36,6 @@ def index(request, template_name="foods/index.html"):
     dinner_foods = Food.active.filter(is_lunch=False,
                                       time_at=datetime.date.today())
 
-    #import pdb
-    #pdb.set_trace()
-    #TODO is_admin + template
-
     page_title = '175game canteen'
 
     return render_to_response(template_name, locals(),
@@ -145,7 +141,7 @@ def add_review(request):
         and 'success', a True/False value indicating
         if the save was successful.
     """
-    form = ProductReviewForm(request.POST)
+    form = FoodReviewForm(request.POST)
     if form.is_valid():
         review = form.save(commit=False)
         slug = request.POST.get('slug')
@@ -154,7 +150,7 @@ def add_review(request):
         review.product = product
         review.save()
 
-        template = "catalog/product_review.html"
+        template = "foods/food_review.html"
         html = render_to_string(template, {'review': review})
         response = simplejson.dumps({'success': 'True', 'html': html})
 
@@ -178,9 +174,9 @@ def add_tag(request):
     tags = request.POST.get('tag', '')
     slug = request.POST.get('slug', '')
     if len(tags) > 2:
-        p = Product.active.get(slug=slug)
+        p = Food.active.get(slug=slug)
         html = u''
-        template = "catalog/tag_link.html"
+        template = "foods/tag_link.html"
         for tag in tags.split():
             tag.strip(',')
             Tag.objects.add_tag(p, tag)

@@ -3,7 +3,7 @@
 {% block content %}
 
 
-   <div class="left">
+   <div class="">
       <h4 class="page-title">My Account</h4>
       <section class="main clearfix inner">
       <!--TODO show the user food history-->
@@ -11,7 +11,7 @@
          <legend>foods History(coming soon)</legend>
       </fieldset>
 
-      <fieldset class="my_account">
+      <fieldset class="">
          <legend>Account Settings</legend>
          <ul>
             <li><a href="{% url django.contrib.auth.views.password_change %}">Change Password</a></li>
@@ -21,9 +21,9 @@
    </div>
 
 
-   <div class="right">
-      <div class="block">
-         <ul class="setting">
+   <div class="">
+      <div class="">
+         <ul class="">
             <li><a href="#">› My History</a></li>
             <li><a href="{% url my_account %}">› 帐户设置</a></li>
          </ul>
