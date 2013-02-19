@@ -1,37 +1,41 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
 {% if form.errors %}
-<ul class="errorlist">
-   <li class="text-warning">目测是账号和密码不匹配.=(</li>
-</ul>
-<br />
+   <p class="text-warning erroTip">{% trans 'account does not match password.'%}</p>
 {% endif %}
 
 <form class="form-horizontal" method="post" action="{% url django.contrib.auth.views.login %}">
    <div class="control-group">
-      <label class="control-label" for="username">用户名</label>
+
+      <label class="control-label" for="username">{% trans 'username' %}</label>
       <div class="controls">
-         <input type="text" id="username" name="username" placeholder="用户名">
+         <input type="text" id="username" name="username" placeholder="{% trans 'username' %}">
       </div>
    </div>
    <div class="control-group">
-      <label class="control-label" for="password">密码</label>
+      <label class="control-label" for="password">{% trans 'password'%}</label>
       <div class="controls">
-         <input type="password" id="password" name="password" placeholder="密码">
+         <input type="password" id="password" name="password" placeholder="{% trans 'password' %}">
       </div>
    </div>
    <div class="control-group">
       <div class="controls">
          <label class="checkbox">
-            <input type="checkbox" id="remember" name="remember_me" checked>下次自动登录
+            <input type="checkbox" id="remember" name="remember_me" checked>{% trans 'remember me'%}
          </label>
-         <button type="submit" class="btn" id="">登录</button>
+         <button type="submit" class="btn btn-primary" id="">{% trans 'login' %}</button>
+         <a href="/accounts/password_reset">{% trans 'forget password'%}</a>
       </div>
    </div>
    <input type="hidden" name="next" value="{{ next }}" />
    {% csrf_token %}
 </form>
 
+{% endblock %}
+
+{% block  css %}
+<link href="{{ STATIC_URL  }}css/page/form.css" rel="stylesheet" type="text/css"/>
 {% endblock %}

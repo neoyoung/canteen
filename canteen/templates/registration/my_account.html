@@ -1,39 +1,35 @@
 {% extends "base.html" %}
+{% load i18n  %}
 
 {% block content %}
 
+<div class="tabbable tabs-left">
 
-   <div class="">
-      <h4 class="page-title">My Account</h4>
-      <section class="main clearfix inner">
-      <!--TODO show the user food history-->
-      <fieldset class="">
-         <legend>foods History(coming soon)</legend>
-      </fieldset>
-
-      <fieldset class="">
-         <legend>Account Settings</legend>
-         <ul>
-            <li><a href="{% url django.contrib.auth.views.password_change %}">Change Password</a></li>
-         </ul>
-      </fieldset>
-      </section>
-   </div>
+   <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a href="#settings">{% trans 'Settings' %}</a></li>
+      <li><a href="#foodsHistory">{% trans 'Foods History'  %}</a></li>
+   </ul>
 
 
-   <div class="">
-      <div class="">
-         <ul class="">
-            <li><a href="#">› My History</a></li>
-            <li><a href="{% url my_account %}">› 帐户设置</a></li>
+   <div class="tab-content">
+      <div class="tab-pane active" id="settings">
+         <ul class="unstyled">
+            <li><a href="{% url django.contrib.auth.views.password_change %}">{% trans 'Change password'  %}</a></li>
          </ul>
       </div>
+      <div class="tab-pane" id="foodsHistory">
+         <p class="muted">
+         {% trans 'Comming soon' %}
+         </p>
+      </div>
    </div>
-
+</div>
 
 {% endblock %}
 
 
-
+{% block script %}
+<script type="text/javascript" data-main="{{ STATIC_URL  }}js/page/account" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
+{% endblock %}
 
 

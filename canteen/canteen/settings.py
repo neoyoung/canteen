@@ -273,3 +273,15 @@ META_DESCRIPTION = "a canteen demo for 175game.And just enjoy.=)"
 
 #
 LOGIN_REDIRECT_URL = '/accounts/my_account/'
+
+
+# Host for sending email.
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+
+# Optional SMTP authentication information for EMAIL_HOST.
+EMAIL_HOST_USER = 'zhkzyth@gmail.com'
+EMAIL_HOST_PASSWORD = 'zhg709394'
+
+# Port for sending email.
+EMAIL_PORT = 587

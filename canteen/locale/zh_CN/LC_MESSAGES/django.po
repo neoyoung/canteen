@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 18:44+0800\n"
+"POT-Creation-Date: 2013-02-19 10:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,4 +36,40 @@ msgstr ""
 
 #: canteen/remember_me/forms.py:15
 msgid "Remember Me"
+msgstr ""
+
+#: templates/registration/login.html:8
+msgid "account does not match password."
+msgstr ""
+
+#: templates/registration/login.html:15 templates/registration/login.html:17
+msgid "username"
+msgstr ""
+
+#: templates/registration/login.html:21 templates/registration/login.html:23
+msgid "password"
+msgstr ""
+
+#: templates/registration/login.html:29
+msgid "remember me"
+msgstr ""
+
+#: templates/registration/login.html:31
+#: templates/registration/password_change_form.html:33
+msgid "login"
+msgstr ""
+
+#: templates/registration/password_change_form.html:11
+#: templates/registration/password_change_form.html:13
+msgid "old_password"
+msgstr ""
+
+#: templates/registration/password_change_form.html:18
+#: templates/registration/password_change_form.html:20
+#: templates/registration/password_change_form.html:27
+msgid "new_password"
+msgstr ""
+
+#: templates/registration/password_change_form.html:25
+msgid "new_password_confirm"
 msgstr ""
