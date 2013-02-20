@@ -281,7 +281,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 
 # Optional SMTP authentication information for EMAIL_HOST.
 EMAIL_HOST_USER = 'zhkzyth@gmail.com'
-EMAIL_HOST_PASSWORD = 'zhg709394'
+EMAIL_HOST_PASSWORD = ''
 
 # Port for sending email.
 EMAIL_PORT = 587
