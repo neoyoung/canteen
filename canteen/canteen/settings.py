@@ -161,6 +161,8 @@ INSTALLED_APPS = (
     'canteen.order',
     #
     'canteen.remember_me',
+    #menu support
+    'canteen.menu',
 )
 
 # A sample logging configuration. The only tangible logging
