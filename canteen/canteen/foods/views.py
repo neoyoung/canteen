@@ -33,7 +33,6 @@ def index(request, template_name="foods/index.html"):
                                      offertime__lte=endTime)\
                              .order_by('offertime_type__show_index')
 
-
     page_title = '175game canteen'
 
     return render_to_response(template_name, locals(),

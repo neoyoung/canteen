@@ -26,17 +26,50 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
       function ($,jqueryReveal,bootstrap,base,User) {
 
          $(function() {
+            
+            //wrap one more level .
+            function showReveal(options){
+               var defaults = {
+                  animation: 'fadeAndPop',
+                  animationspeed: 300,
+                  closeonbackgroundclick: false,
+                  dismissmodalclass: 'close-reveal-modal'
+               };
+
+               options = $.extend({}, defaults, options);
+
+               $(options.target).empty().html(options.msg)
+                  .reveal({animation: options.animation,
+                     animationspeed: options.animationspeed,
+                     closeonbackgroundclick: options.closeonbackgroundclick,
+                     dismissmodalclass: options.dismissmodalclass
+                  });
+            }
 
                var subBtn = $('#ship'),
                    success = $('#ship-form .js-msg'),
                    radioContainer = $('#ship-form .js-container'),
-                   user = new User();
+                   user = new User(),
+                   messageMap = {
+                      //Lunch message
+                      1: "<h4>午餐订餐成功啦。</h4><p>去围观下今天谁拿第一哇。=)</p><a class='close-reveal-modal'>&#215;</a>",
+                      2: "<h4>你已经预定过了午餐了。</p><a class='close-reveal-modal'>&#215;</a>",
+                      3: "<h4>午餐时间过了哦，找下前台MM或许还来得及。</p><a class='close-reveal-modal'>&#215;</a>",
+                     
+                      //Dinner message
+                      4: "<h4>晚餐预定成功了。</h4><p>去围观下今天谁拿第一哇。=)</p><a class='close-reveal-modal'>&#215;</a>",
+                      5: "<h4>你已经预定过了晚餐了。</h4><p>去围观下今天谁拿第一哇。=)</p><a class='close-reveal-modal'>&#215;</a>",
+                      6: "<h4>晚餐时间过了哦，找下前台MM或许还来得及。</p><a class='close-reveal-modal'>&#215;</a>",
 
+                      //handle the 404 or more status
+                      404: "<h4>貌似出问题了，上水群找下管理猿吧=(</p><a class='close-reveal-modal'>&#215;</a>"
+                  };
 
+               //TODO handle the return code like 403, fail gracefully
                $('#ship').bind('click', function () {
 
                   var val = $('#ship-form').find('input[name="order_type"]:checked').val(),
-                  data = {order_type: val},
+                  data = {offertime_type: val},
                   msg;
 
                   if ( !user.isLogin() ) {
@@ -45,24 +78,32 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
                      return false;
                   }
 
-                  $.post("/order/add/",data,function(data) {
+                  var posting = $.post("/order/add/",data);
+                  
+                  posting.done(function(data) {
 
-                     if (data.success === 'True') {
+                     if ( data.success & data.success === 'True') {
                         
-                        msg = "<h4>订餐成功啦~</h4><p>去围观下今天谁拿第一哇.=)</p><a class='close-reveal-modal'>&#215;</a>";
+                        msg = messageMap[data.msgType];
 
                      } else {
-
-                        msg = "<h4>貌似出问题了，上水群找下管理猿吧=(</h4><a class='close-reveal-modal'>&#215;</a>";
+                        //default
+                        
+                        if ( data.msgType ) {
+                           msg = messageMap[404];
+                        }
                      }
 
-                     $('#success-confirm').empty().html(msg)
-                                        .reveal({animation: 'fadeAndPop',
-                                                 animationspeed: 300,
-                                                 closeonbackgroundclick: false,
-                                                 dismissmodalclass: 'close-reveal-modal'
-                                               });
-                     });
+                     showReveal({target:"#success-confirm",msg:msg});
+
+                  });
+
+                  //may never fall down here =)
+                  posting.fail(function(data){
+
+                     showReveal({target:"#success-confirm",msg:messageMap[404]});
+
+                  });
 
                   $(this).attr('disabled', 'disabled');
 

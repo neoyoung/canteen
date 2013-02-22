@@ -43,9 +43,9 @@ class Order(BaseOrderInfo):
     date = models.DateTimeField(default=timezone.now())
     menu = models.ForeignKey(Menu)
     is_active = models.BooleanField(default=True)
-    ip_address = models.IPAddressField(blank=True)
+    ip_address = models.IPAddressField(blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User)
 
     def __unicode__(self):
         return u'Order #' + str(self.id)
