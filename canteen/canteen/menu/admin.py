@@ -1,5 +1,5 @@
 from django.contrib import admin
-from canteen.menu.models import Menu, MenuType
+from canteen.menu.models import Menu, OffertimeType
 from canteen.menu.forms import MenuAdminForm
 
 
@@ -17,13 +17,14 @@ class MenuAdmin(admin.ModelAdmin):
 admin.site.register(Menu, MenuAdmin)
 
 
-class MenuTypeAdmin(admin.ModelAdmin):
+class OffertimeTypeAdmin(admin.ModelAdmin):
     #sets up values for how admin site lists menuType
-    list_display = ('name', 'last_updated', 'creator')
-    list_display_links = ('name',)
-    list_per_page = 20
-    ordering = ['-last_updated']
-    search_fields = ['name', 'creator']
+    #list_display = ('name', 'last_updated', 'creator')
+    #list_display_links = ('name',)
+    #list_per_page = 20
+    #ordering = ['-last_updated']
+    #search_fields = ['name', 'creator']
     #exclude = ('created_at', 'updated_at',)
+    pass
 
-admin.site.register(MenuType, MenuTypeAdmin)
+admin.site.register(OffertimeType, OffertimeTypeAdmin)

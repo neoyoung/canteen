@@ -3,6 +3,7 @@ from django.db import models
 from django.http import Http404
 from canteen import settings
 from django.contrib.auth.models import User
+#from django.utils.translation import ugettext_lazy as _
 import tagging
 
 
@@ -66,6 +67,7 @@ class ActiveFoodManager(models.Manager):
 
 class Food(models.Model):
     """ model class containing information about a food """
+
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(
         max_length=255,

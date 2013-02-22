@@ -7,15 +7,15 @@
       今日菜式
    </h1>
 
+   {% for menu_set in today_menu%}
    <div>
-      <h4>Lunch</h4>
-      {% if  lunch_foods %}
-
+   <h4>{{ menu_set.name }}</h4>
+   {% if menu_set.foods.all %}
       <ul class="inline food-list">
-         {% for food in lunch_foods %}
+         {% for foods in menu_set.foods.all %}
          <li>
 
-         {{ food.name  }}
+            {{ foods.name  }}
 
          </li>
 
@@ -26,29 +26,10 @@
       <p class="muted">还未添加美食</p>
       {% endif %}  
    </div>
-
-   <hr>
-
-   <div>
-      <h4>Dinner</h4>
-      {% if dinner_foods %}
-
-      <ul class="inline food-list">
-         {% for food in dinner_foods %}
-         <li>
-
-         {{ food.name  }}
-
-         </li>
-
-         {% endfor %}
-
-      </ul>
-      {% else %}
-      <p class="muted">还未添加美食</p>
-      {% endif %}  
-   </div>
-
+   {% if not forloop.last  %}
+      <hr />   
+   {% endif %}
+   {% endfor %}
 </div>
 
 
@@ -96,4 +77,4 @@
 
    <script type="text/javascript" data-main="{{ STATIC_URL  }}js/page/home" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
 
-{% endblock %}
+   {% endblock %}

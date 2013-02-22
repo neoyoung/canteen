@@ -2,16 +2,10 @@ from django.contrib import admin
 from canteen.order.models import Order
 
 
-#class OrderItemInline(admin.StackedInline):
-    #model = OrderItem
-    #extra = 0
-
-
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'date', 'order_type', 'user')
-    list_filter = ('date', 'order_type')
+    list_display = ('__unicode__', 'date', 'user')
+    list_filter = ('date',)
     search_fields = ('date',)
-    #inlines = [OrderItemInline, ]
 
     #fieldsets = (
         #('Basics', {'fields': ('status', 'email', 'phone')}),
