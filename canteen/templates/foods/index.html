@@ -6,30 +6,34 @@
    <h1 class="">
       今日菜式
    </h1>
-
-   {% for menu_set in today_menu%}
-   <div>
-   <h4>{{ menu_set.name }}</h4>
-   {% if menu_set.foods.all %}
-      <ul class="inline food-list">
-         {% for foods in menu_set.foods.all %}
-         <li>
+   {% if today_menu %}
+      {% for menu_set in today_menu%}
+      <div>
+         <h4>{{ menu_set.name }}</h4>
+         {% if menu_set.foods.all %}
+         <ul class="inline food-list">
+            {% for foods in menu_set.foods.all %}
+            <li>
 
             {{ foods.name  }}
 
-         </li>
+            </li>
 
-         {% endfor %}
+            {% endfor %}
 
-      </ul>
-      {% else %}
-      <p class="muted">还未添加美食</p>
-      {% endif %}  
-   </div>
-   {% if not forloop.last  %}
+         </ul>
+         {% else %}
+         <p class="muted">还未添加美食</p>
+         {% endif %}  
+      </div>
+      {% if not forloop.last  %}
       <hr />   
+      {% endif %}
+      {% endfor %}
+   {% else %} 
+         <p class="muted">还未添加美食</p>
    {% endif %}
-   {% endfor %}
+
 </div>
 
 
@@ -68,13 +72,13 @@
 {% endblock %}
 
 {% block  css %}
-   <link href="{{ STATIC_URL  }}css/page/home.css" rel="stylesheet" type="text/css"/>
-   <link href="{{ STATIC_URL  }}css/widget/reveal.css" rel="stylesheet" type="text/css"/>
+<link href="{{ STATIC_URL  }}css/page/home.css" rel="stylesheet" type="text/css"/>
+<link href="{{ STATIC_URL  }}css/widget/reveal.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 
 {% block script %}
 
-   <script type="text/javascript" data-main="{{ STATIC_URL  }}js/page/home" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
+<script type="text/javascript" data-main="{{ STATIC_URL  }}js/page/home" src="{{ STATIC_URL }}js/lib/require/require.js"></script>
 
-   {% endblock %}
+{% endblock %}

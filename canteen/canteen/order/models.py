@@ -14,23 +14,6 @@ class BaseOrderInfo(models.Model):
     phone = models.CharField(max_length=20, blank=True)
 
 
-#class OrderType(models.Model):
-    #""" model class for storing a user order instance """
-    #class Meta:
-        #db_table = 'OrderType'
-        #ordering = ['name']
-        #verbose_name_plural = 'orderTypes'
-
-    ##order info
-    #name = models.CharField(max_length=50)
-    #is_active = models.BooleanField(default=True)
-    #last_updated = models.DateTimeField(auto_now=True)
-    #creator = models.ForeignKey(User, null=True)
-
-    #def __unicode__(self):
-        #return self.name
-
-
 class Order(BaseOrderInfo):
     """ model class for storing a user order instance """
     class Meta:
