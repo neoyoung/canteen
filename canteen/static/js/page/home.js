@@ -52,17 +52,17 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
                    user = new User(),
                    messageMap = {
                       //Lunch message
-                      1: "<h4>午餐预定成功啦。</h4><p>去围观下今天谁拿第一哇。=)</p><a class='close-reveal-modal'>&#215;</a>",
-                      2: "<h4>你已经预定过了午餐了。</p><a class='close-reveal-modal'>&#215;</a>",
-                      3: "<h4>现在不是午餐定餐时间哦～</p><a class='close-reveal-modal'>&#215;</a>",
+                      1: "<p>午餐预定成功啦。</p><a class='close-reveal-modal'>&#215;</a>",
+                      2: "<p>你已经预定过了午餐了。</p><a class='close-reveal-modal'>&#215;</a>",
+                      3: "<p>现在不是午餐定餐时间哦～</p><a class='close-reveal-modal'>&#215;</a>",
                      
                       //Dinner message
-                      4: "<h4>晚餐预定成功了。</h4><p>去围观下今天谁拿第一哇。=)</p><a class='close-reveal-modal'>&#215;</a>",
-                      5: "<h4>你已经预定过了晚餐了。</h4><p>去围观下今天谁拿第一哇。=)</p><a class='close-reveal-modal'>&#215;</a>",
-                      6: "<h4>现在不是晚餐定餐时间哦～</p><a class='close-reveal-modal'>&#215;</a>",
+                      4: "<p>晚餐预定成功啦。</p><a class='close-reveal-modal'>&#215;</a>",
+                      5: "<p>你已经预定过了晚餐了。</p><a class='close-reveal-modal'>&#215;</a>",
+                      6: "<p>现在不是晚餐定餐时间哦～</p><a class='close-reveal-modal'>&#215;</a>",
 
                       //handle the 404 or more status
-                      404: "<h4>貌似出问题了，上水群找下管理猿吧=(</p><a class='close-reveal-modal'>&#215;</a>"
+                      404: "<p>貌似出问题了，上水群找下管理猿吧=(</p><a class='close-reveal-modal'>&#215;</a>"
                   };
 
                //TODO handle the return code like 403, fail gracefully
@@ -70,8 +70,8 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
 
                   var val = $('#ship-form').find('input[name="order_type"]:checked').val(),
                   data = {offertime_type: val},
-                  msg = messageMap[404];
-
+                  msg="";
+                  
                   if ( !user.isLogin() ) {
                      //redirect to the login page
                      window.location = '/accounts/login';
@@ -82,16 +82,9 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
                   
                   posting.done(function(data) {
 
-                     if ( data.success === 'True') {
-                        
-                        msg = messageMap[data.msgType];
+                     for (var i = 0; i < data.msgType.length; i += 1) {
 
-                     } else {
-                        //default
-                        
-                        if ( data.msgType ) {
-                           msg = messageMap[data.msgType];
-                        }
+                        msg += messageMap[data.msgType[i]];
                      }
 
                      showReveal({target:"#success-confirm",msg:msg});
@@ -105,7 +98,7 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
 
                   });
 
-                  $(this).attr('disabled', 'disabled');
+                  //$(this).attr('disabled', 'disabled');
 
                   return false;
 

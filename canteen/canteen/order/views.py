@@ -13,8 +13,12 @@ from django.contrib.auth.decorators import login_required
 from django.utils.safestring import mark_safe
 from django.utils.decorators import available_attrs
 from functools import wraps
+#
+from django.db.models import Q
 
 from datetime import timedelta, datetime, time
+
+from django.db import connection
 
 from canteen.order.models import Order
 from canteen.menu.models import Menu, OffertimeType
@@ -36,11 +40,17 @@ _DINNER_OK = 4  # 晚餐预定成功
 _DINNER_BOOK_ALREADY = 5  # 晚餐已经预定过了
 _DINNER_OVERTIME = 6  # 非晚餐预定时间
 
+_TWO_MEALS_OK = 7
+_TWO_MEALS_NOT_OK = 8
+
 _DEFAULT_ERROR_CODE = 404  # error unknown
+
+#OFFERTIME_TYPE
+_LUNCH_TYPE = 1
+_DINNER_TYPE = 2
 
 
 #helper func
-#ajax decorator
 def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
               ajax_required=True, json_form_errors=False):
     """
@@ -95,39 +105,11 @@ def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
 
 
 class TimeInterface(object):
-    def _get_menu(self, *args, **kwargs):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    def _get_timerange(self):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    def _is_valid_time(self):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    def add_order(self, postdata):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    def list_order(self, template_name):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-
-class LunchTime(TimeInterface):
-    start_time = datetime.combine(
-        timezone.now().date(),
-        time(9, 30, 0, 0, timezone.get_current_timezone()))
-    end_time = datetime.combine(
-        start_datetime, time(10, 30, 0, 0, timezone.get_current_timezone()))
-
-    def __init__(self, postdata, request):
-        self.msgType = _LUNCH_OK
-        #TODO get from the database
-        self.offertime_type = postdata['offertime_type']
-        self.request = request
 
     def _get_menu(self):
         menu_set = Menu.objects.filter(
-            offer_type__offertime_start__lte=timezone.now().now().time(),
-            offer_type__offertime_stop__gt=timezone.now().now().time(),
+            offer_type__offertime_start__lte=datetime.now().time(),
+            offer_type__offertime_stop__gt=datetime.now().time(),
             offer_type__offer_type=self.offertime_type)
         if menu_set:
             return menu_set[0]
@@ -135,26 +117,29 @@ class LunchTime(TimeInterface):
             return []
 
     def _get_timerange(self):
-        #start_datetime = datetime.combine(
-            #timezone.now().date(), time(*LunchTime.start_time))
-        #end_datetime = datetime.combine(
-            #start_datetime, time(*LunchTime.end_time))
+        offer_type_info = OffertimeType.objects.filter(
+            offer_type=self.offertime_type)[0]
+        start_datetime = offer_type_info.offertime_start
+        end_datetime = offer_type_info.offertime_stop
 
-        start_datetime = LunchTime.start_datetime
-        end_datetime = LunchTime.end_datetime
+        return (start_datetime, end_datetime)
+
+    #some helper funcs
+    def _get_date_range(self):
+        start_time, end_time = self._get_timerange()
+        start_datetime = datetime.combine(datetime.now(), start_time)
+        end_datetime = datetime.combine(start_datetime, end_time)
 
         return (start_datetime, end_datetime)
 
     def _is_valid_time(self):
-        #tmp hack the storage strategy used by django
-        now = timezone.now().now().time()
-        #import pdb
-        #pdb.set_trace()
+        now = datetime.now().time()
         offer_type = OffertimeType.objects.filter(
             offertime_start__lte=now,
             offertime_stop__gt=now,
             offer_type=self.offertime_type
         )
+
         if offer_type:
             return True
         else:
@@ -162,13 +147,72 @@ class LunchTime(TimeInterface):
 
     def _is_book_already(self):
         order = Order.objects.filter(
-            date__range=self._get_timerange(),
+            date__range=self._get_date_range(),
             menu__offer_type__offer_type=self.offertime_type,
             user=self.request.user)
         return order
 
-    def get_msgType(self):
-        return self.msgType
+    def get_message_type(self):
+        return [self.msgType]
+
+    def add_order(self):
+        raise NotImplementedError("Subclass must implement abstract method")
+
+    def list_order(self, template_name):
+        """ list Morning orders"""
+        orderList = Order.objects.filter(
+            date__range=self._get_date_range(),
+            menu__offer_type__offer_type=self.offertime_type
+        )
+
+        return render_to_response(
+            template_name, locals(),
+            context_instance=RequestContext(self.request))
+
+
+class LunchTime(TimeInterface):
+    def __init__(self, request):
+        self.msgType = _LUNCH_OK
+        self.offertime_type = _LUNCH_TYPE
+        self.request = request
+
+    def add_order(self):
+
+        if self._is_valid_time():
+            if not self._is_book_already():
+                order_menu = self._get_menu()
+                order = Order()
+                order.user = self.request.user
+                order.date = datetime.now()
+                order.menu = order_menu
+                order.save()
+                return order
+            else:
+                self.msgType = _LUNCH_BOOK_ALREADY
+        else:
+            self.msgType = _LUNCH_OVERTIME
+        #not valid or no such menu
+        return {}
+
+
+class DinnerTime(TimeInterface):
+    def __init__(self, request):
+        self.msgType = _DINNER_OK
+        self.offertime_type = _DINNER_TYPE
+        self.request = request
+
+    def _is_valid_time(self):
+        now = datetime.now().time()
+        offer_type = OffertimeType.objects.filter(
+            offertime_start__lte=now,
+            offertime_stop__gt=now,
+            offer_type=self.offertime_type
+        )
+
+        if offer_type:
+            return True
+        else:
+            return None
 
     def add_order(self):
         #import pdb
@@ -183,39 +227,45 @@ class LunchTime(TimeInterface):
                 order.save()
                 return order
             else:
-                self.msgType = _LUNCH_BOOK_ALREADY
+                self.msgType = _DINNER_BOOK_ALREADY
         else:
-            self.msgType = _LUNCH_OVERTIME
+            self.msgType = _DINNER_OVERTIME
         #not valid or no such menu
         return {}
 
-    def list_order(self, template_name):
-        """ list Morning orders"""
-        orderList = Order.objects.filter(date__range=self._get_timerange())
 
-        return render_to_response(template_name, locals(),
-                                  context_instance=RequestContext(request))
+class TwomealsTime(TimeInterface):
 
+    def __init__(self, request):
+        self.msgType = _TWO_MEALS_OK
+        self.lunch = LunchTime(request)
+        self.dinner = DinnerTime(request)
 
-class DinnerTime(TimeInterface):
-    def __init__(self, postdata, request):
-        pass
-
-    def _get_menu(self):
-        pass
-
-    def _get_timerange(self):
-        pass
-
-    def _is_valid_time(self):
-        pass
+    def get_message_type(self):
+        #import pdb
+        #pdb.set_trace()
+        if self.msgType == _TWO_MEALS_OK:
+            return super(TwomealsTime, self).get_message_type()
+        else:
+            return [self.lunch.msgType, self.dinner.msgType]
 
     def add_order(self):
-        pass
+        """
+            a helper func to simplify user action.
+        """
+        #TODO roll back
+        self.lunch.add_order()
+        self.dinner.add_order()
+        if (self.lunch.msgType == _LUNCH_OK
+                and self.dinner.msgType == _DINNER_OK):
+            return True
+        else:
+            self.msgType = _TWO_MEALS_NOT_OK
+            return []
 
 
 #@login_required
-@ajax_view(method="POST")
+#@ajax_view(method="POST")
 def add_order(request):
     """ Create user order.
         User can create an order one day.
@@ -225,40 +275,43 @@ def add_order(request):
     #TODO check user input
     timeMap = {
         1: LunchTime,
-        2: DinnerTime
+        2: DinnerTime,
+        3: TwomealsTime
     }
-    import pdb
-    pdb.set_trace()
-    currentTime = timeMap[int(postdata['offertime_type'])](postdata, request)
+    currentTime = timeMap[int(postdata['offertime_type'])](request)
 
     if currentTime.add_order():
-        response.update({'msgType': currentTime.msgType,
+        response.update({'msgType': currentTime.get_message_type(),
                          'success': 'True'})
     else:
-        response.update({'msgType': currentTime.msgType})
+        response.update({'msgType': currentTime.get_message_type()})
 
     response = simplejson.dumps(response)
 
     return HttpResponse(response, mimetype='application/json')
 
 
-#TODO 完善剩余的展示逻辑
+#TODO more friendly
 def list_order(request, template_name="orders/index.html"):
+               #list_type="lunch"):
     """ list today orders"""
-    now = timezone.now().time()
-    timeMap = {
-        1: LunchTime,
-        2: DinnerTime
-    }
-    if LunchTime.start_time <= now <= LunchTime.end_time:
-        #lunch time
-        currentTime = LunchTime(request.POST.copy(), request)
-    else if DinnerTime.start_time <= now <= DinnerTime.end_time:
-        #dinner time
-        currentTime = DinnerTime(request.POST.copy(), request)
+    now = datetime.now()
+
+    forenoon_start = datetime.combine(now, time(0, 0, 0, 0))
+    forenoon_end = datetime.combine(now, time(12, 0, 0, 0))
+
+    afternoon_start = datetime.combine(now, time(0, 0, 0, 0))
+    afternoon_end = datetime.combine(now, time(23, 59, 59, 99999))
+
+    if forenoon_start <= now <= forenoon_end:
+        ##lunch time
+        currentTime = LunchTime(request)
+    elif afternoon_start <= now <= afternoon_end:
+        ##dinner time
+        currentTime = DinnerTime(request)
     else:
-        pass
-    currentTime.list_order(template_name)
+        currentTime = LunchTime(request)
+    return currentTime.list_order(template_name)
 
 
 #@login_required
