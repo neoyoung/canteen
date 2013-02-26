@@ -1,31 +1,31 @@
-A small canteen demo
---------------------
+#A small canteen demo
+
 
 Tech stack
-==========
-- front-end
-- Bootstrap
-- Simple OO
-   - require JS
-- JQ(offcourse)
+-----------
+- Front-end
+ - Bootstrap
+ - Simple OO
+ - require JS
+ - JQ(offcourse)
 
-   - back-end
-   - Django >=1.4
-   - MYSQL
+- Back-end
+ - Django >=1.4
+ - MYSQL
 
 Feature
-=======
+-------
 - meal select
 - order list
 - foods and menu(though not dynamic at all) management
 
- TODO
-=====
+TODO
+----
 - food comment/Tag
 - rewrite the meal form widget
 
 INSTALL
-=======
+-------
 - prepare database
 ```mysql
 CREATE DATABASE canteen CHARACTER SET utf8;
@@ -48,10 +48,15 @@ pip install -r requirments.rt
 cd path/to/prepare/canteen
 ./manager runserver
 ```
-- now,go check the site at [locahost][http://localhost:8000]
+- now,go check the site at [locahost][3]
 
 Additional Message
-=================
+------------------
 It's a demo based on serveral project,go check it if you want to know more.
-- The [ecommerce][http://www.amazon.com/Beginning-Django-E-Commerce-Experts-Development/dp/1430225351], a good book for newbie to master django.
-- A similar menu sys,called [canku][https://github.com/willerce/aidingcan] which based on nodejs.
+- The [ecommerce][1], a good book for newbie to master django.
+- A similar menu sys,called [canku][2] which based on nodejs.
+
+
+[1]: http://www.amazon.com/Beginning-Django-E-Commerce-Experts-Development/dp/1430225351
+[2]: https://github.com/willerce/aidingcan
+[3]: http://localhost:8000
