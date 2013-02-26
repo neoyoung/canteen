@@ -27,23 +27,27 @@ TODO
 INSTALL
 -------
 - prepare database
+
 ```mysql
 CREATE DATABASE canteen CHARACTER SET utf8;
 CREATE USER 'canteen'@'localhost' IDENTIFIED BY 'canteen';
 GRANT ALL ON canteen.* TO 'canteen'@'localhost';
 ```  
 - prepare the virtual env
+
 ```shell
 cd path/to/project
 virtual .
 source bin/activate
 ```
 - install the python eggs
+
 ```shell
 cd path/to/project/
 pip install -r requirments.rt
 ```
 - run the code
+
 ```shell
 cd path/to/prepare/canteen
 ./manager runserver
