@@ -1,4 +1,57 @@
-canteen
-=======
+A small canteen demo
+--------------------
 
-A food ordering sys for fun and practice, based on django + bootstrap + JQ + require.js 
+Tech stack
+==========
+- front-end
+- Bootstrap
+- Simple OO
+   - require JS
+- JQ(offcourse)
+
+   - back-end
+   - Django >=1.4
+   - MYSQL
+
+Feature
+=======
+- meal select
+- order list
+- foods and menu(though not dynamic at all) management
+
+ TODO
+=====
+- food comment/Tag
+- rewrite the meal form widget
+
+INSTALL
+=======
+- prepare database
+```mysql
+CREATE DATABASE canteen CHARACTER SET utf8;
+CREATE USER 'canteen'@'localhost' IDENTIFIED BY 'canteen';
+GRANT ALL ON canteen.* TO 'canteen'@'localhost';
+```  
+- prepare the virtual env
+```shell
+cd path/to/project
+virtual .
+source bin/activate
+```
+- install the python eggs
+```shell
+cd path/to/project/
+pip install -r requirments.rt
+```
+- run the code
+```shell
+cd path/to/prepare/canteen
+./manager runserver
+```
+- now,go check the site at [locahost][http://localhost:8000]
+
+Additional Message
+=================
+It's a demo based on serveral project,go check it if you want to know more.
+- The [ecommerce][http://www.amazon.com/Beginning-Django-E-Commerce-Experts-Development/dp/1430225351], a good book for newbie to master django.
+- A similar menu sys,called [canku][https://github.com/willerce/aidingcan] which based on nodejs.
