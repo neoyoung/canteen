@@ -1,14 +1,7 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-   <head>
-      <title>Bootstrap 101 Template</title>
-      <!-- Bootstrap -->
-      <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
-   </head>
-   <body>
-      <h1>I am sorry=.=...No page found here.</h1>
-      <script src="http://code.jquery.com/jquery-latest.js"></script>
-      <script src="{{ STATIC_URL  }}js/bootstrap.min.js"></script>
-   </body>
-</html>
+{% block title %}404{% endblock %}
+
+{% block content %}
+<h4>oops~It's 404....'</h4>
+{% endblock %}

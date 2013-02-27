@@ -27,10 +27,8 @@ class OffertimeType(models.Model):
 
     #offer time range
     #TODO default delta is 3hours according to the OffertimeType
-    _now = timezone.now()
-    _now3 = _now + Hours3
-    offertime_start = models.TimeField(default=_now.time)
-    offertime_stop = models.TimeField(default=_now3)
+    offertime_start = models.TimeField()
+    offertime_stop = models.TimeField()
 
     def __unicode__(self):
         return self.name

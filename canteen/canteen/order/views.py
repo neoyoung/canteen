@@ -34,9 +34,9 @@ _403_ERROR = _ERROR_MSG % '403 Forbidden'
 _405_ERROR = _ERROR_MSG % '405 Not Allowed'
 
 #TODO be more friendly =)
-_LUNCH_OK = 1  # 午餐预定成功
-_LUNCH_BOOK_ALREADY = 2  # 午餐已经预定过了
-_LUNCH_OVERTIME = 3  # 非午餐预定时间
+_LUNCH_OK = 1  # 午餐 预定成功
+_LUNCH_BOOK_ALREADY = 2  # 午餐 已经预定过了
+_LUNCH_OVERTIME = 3  # 非 午餐 预定时间
 
 _DINNER_OK = 4  # 晚餐预定成功
 _DINNER_BOOK_ALREADY = 5  # 晚餐已经预定过了
@@ -107,6 +107,11 @@ def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
 
 
 class TimeInterface(object):
+
+    def __init__(self, request):
+        self.msgType = _DINNER_OK
+        self.offertime_type = _DINNER_TYPE
+        self.request = request
 
     def _get_menu(self):
         menu_set = Menu.objects.filter(
@@ -205,19 +210,6 @@ class DinnerTime(TimeInterface):
         self.offertime_type = _DINNER_TYPE
         self.request = request
 
-    def _is_valid_time(self):
-        now = datetime.now().time()
-        offer_type = OffertimeType.objects.filter(
-            offertime_start__lte=now,
-            offertime_stop__gt=now,
-            offer_type=self.offertime_type
-        )
-
-        if offer_type:
-            return True
-        else:
-            return None
-
     def add_order(self):
         #import pdb
         #pdb.set_trace()
@@ -269,7 +261,7 @@ class TwomealsTime(TimeInterface):
 
 
 #@login_required
-#@ajax_view(method="POST")
+@ajax_view(method="POST")
 def add_order(request):
     """ Create user order.
         User can create an order one day.
