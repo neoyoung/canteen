@@ -17,12 +17,14 @@ Feature
 -------
 - meal select
 - order list
-- foods and menu(though not dynamic at all) management
+- foods and menu management
 
 TODO
 ----
 - food comment/Tag
-- rewrite the meal form widget
+- user interaction
+- web chatroom
+- game?? oh my =.=
 
 INSTALL
 -------
@@ -58,6 +60,7 @@ cd path/to/prepare/canteen
 Additional Message
 ------------------
 It's a demo based on serveral project,go check it if you want to know more.
+
 - The [ecommerce][1], a good book for newbie to master django.
 - A similar menu sys,called [canku][2] which based on nodejs.
 
