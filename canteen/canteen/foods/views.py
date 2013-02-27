@@ -15,7 +15,7 @@ from datetime import *
 #from tagging.models import Tag, TaggedItem
 #
 from canteen.foods.models import Category, Food
-from canteen.menu.models import Menu
+from canteen.menu.models import Menu, OffertimeType
 
 
 def index(request, template_name="foods/index.html"):
@@ -26,6 +26,7 @@ def index(request, template_name="foods/index.html"):
     today_menu = Menu.objects.filter(offertime__gte=startTime,
                                      offertime__lte=endTime)\
                              .order_by('offer_type__show_index')
+    typelist = OffertimeType.objects.filter(is_active=True)
 
     page_title = '175game canteen'
 

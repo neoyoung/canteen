@@ -44,17 +44,11 @@
          <legend>我的订餐</legend>
 
          <div class="js-container">
-            <label class="radio">
-               <input type="radio" name="order_type" id="order_type_1" value="1" >午餐
+            {% for type in typelist %}
+            <label class="checkbox">
+               <input type="checkbox" checked="checked" value="{{ type.offer_type }}">{{ type.name  }}
             </label>
-
-            <label class="radio">
-               <input type="radio" name="order_type" id="order_type_2" value="2">晚餐
-            </label>
-
-            <label class="radio">
-               <input type="radio" name="order_type" id="order_type_3" value="3" checked>两餐
-            </label>
+            {% endfor %}
          </div>
 
          <div class="js-msg"></div>

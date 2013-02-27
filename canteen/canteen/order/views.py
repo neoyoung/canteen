@@ -34,22 +34,22 @@ _403_ERROR = _ERROR_MSG % '403 Forbidden'
 _405_ERROR = _ERROR_MSG % '405 Not Allowed'
 
 #TODO be more friendly =)
-_LUNCH_OK = 1  # 午餐 预定成功
-_LUNCH_BOOK_ALREADY = 2  # 午餐 已经预定过了
-_LUNCH_OVERTIME = 3  # 非 午餐 预定时间
+_LUNCH_OK = 1  # 午餐预定成功
+_LUNCH_BOOK_ALREADY = 2  # 午餐已经预定过了
+#_LUNCH_OVERTIME = 3  # 非午餐预定时间
 
-_DINNER_OK = 4  # 晚餐预定成功
-_DINNER_BOOK_ALREADY = 5  # 晚餐已经预定过了
-_DINNER_OVERTIME = 6  # 非晚餐预定时间
+#_DINNER_OK = 4  # 晚餐预定成功
+#_DINNER_BOOK_ALREADY = 5  # 晚餐已经预定过了
+#_DINNER_OVERTIME = 6  # 非晚餐预定时间
 
-_TWO_MEALS_OK = 7
-_TWO_MEALS_NOT_OK = 8
+#_TWO_MEALS_OK = 7
+#_TWO_MEALS_NOT_OK = 8
 
-_DEFAULT_ERROR_CODE = 404  # error unknown
+#_DEFAULT_ERROR_CODE = 404  # error unknown
 
 #OFFERTIME_TYPE
-_LUNCH_TYPE = 1
-_DINNER_TYPE = 2
+#_LUNCH_TYPE = 1
+#_DINNER_TYPE = 2
 
 
 #helper func
@@ -106,22 +106,25 @@ def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
     return decorator
 
 
-class TimeInterface(object):
+class Offertype(object):
 
-    def __init__(self, request):
-        self.msgType = _DINNER_OK
-        self.offertime_type = _DINNER_TYPE
-        self.request = request
+    def __init__(self, user, offertime_type):
+        self.offertime_type = offertime_type
+        self.user = user
+        self.message = None
+        self.menu = None
 
     def _get_menu(self):
-        menu_set = Menu.objects.filter(
-            offer_type__offertime_start__lte=datetime.now().time(),
-            offer_type__offertime_stop__gt=datetime.now().time(),
-            offer_type__offer_type=self.offertime_type)
-        if menu_set:
-            return menu_set[0]
+        if self.menu is not None:
+            return self.menu
         else:
-            return []
+            menu = Menu.objects.filter(
+                offer_type__offer_type=self.offertime_type)[0]
+            if menu:
+                self.menu = menu
+                return menu
+            else:
+                return []
 
     def _get_timerange(self):
         offer_type_info = OffertimeType.objects.filter(
@@ -131,7 +134,6 @@ class TimeInterface(object):
 
         return (start_datetime, end_datetime)
 
-    #some helper funcs
     def _get_date_range(self):
         start_time, end_time = self._get_timerange()
         #make timezone aware
@@ -158,218 +160,56 @@ class TimeInterface(object):
         order = Order.objects.filter(
             date__range=self._get_date_range(),
             menu__offer_type__offer_type=self.offertime_type,
-            user=self.request.user)
+            user=self.user)
         return order
 
-    def get_message_type(self):
-        return [self.msgType]
+    def get_message(self):
+        return self.message
 
+    def _set_message(self, content):
+        self.message = self._get_menu().name.encode('utf-8') + content
+
+    #TODO seperate the error message ????
     def add_order(self):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    def list_order(self, template_name):
-        """ list Morning orders"""
-        orderList = Order.objects.filter(
-            date__range=self._get_date_range(),
-            menu__offer_type__offer_type=self.offertime_type
-        )
-
-        return render_to_response(
-            template_name, locals(),
-            context_instance=RequestContext(self.request))
-
-
-class LunchTime(TimeInterface):
-    def __init__(self, request):
-        self.msgType = _LUNCH_OK
-        self.offertime_type = _LUNCH_TYPE
-        self.request = request
-
-    def add_order(self):
-
         if self._is_valid_time():
+            order_menu = self._get_menu()
             if not self._is_book_already():
-                order_menu = self._get_menu()
                 order = Order()
-                order.user = self.request.user
+                order.user = self.user
                 order.date = datetime.now()
                 order.menu = order_menu
                 order.save()
+                self._set_message("预定成功拉。")
                 return order
             else:
-                self.msgType = _LUNCH_BOOK_ALREADY
+                self._set_message("已经预定过拉。")
         else:
-            self.msgType = _LUNCH_OVERTIME
+            self._set_message("不在预定时间里哦。")
         #not valid or no such menu
         return {}
-
-
-class DinnerTime(TimeInterface):
-    def __init__(self, request):
-        self.msgType = _DINNER_OK
-        self.offertime_type = _DINNER_TYPE
-        self.request = request
-
-    def add_order(self):
-        #import pdb
-        #pdb.set_trace()
-        if self._is_valid_time():
-            if not self._is_book_already():
-                order_menu = self._get_menu()
-                order = Order()
-                order.user = self.request.user
-                order.date = timezone.now()
-                order.menu = order_menu
-                order.save()
-                return order
-            else:
-                self.msgType = _DINNER_BOOK_ALREADY
-        else:
-            self.msgType = _DINNER_OVERTIME
-        #not valid or no such menu
-        return {}
-
-
-class TwomealsTime(TimeInterface):
-
-    def __init__(self, request):
-        self.msgType = _TWO_MEALS_OK
-        self.lunch = LunchTime(request)
-        self.dinner = DinnerTime(request)
-
-    def get_message_type(self):
-        #import pdb
-        #pdb.set_trace()
-        if self.msgType == _TWO_MEALS_OK:
-            return super(TwomealsTime, self).get_message_type()
-        else:
-            return [self.lunch.msgType, self.dinner.msgType]
-
-    def add_order(self):
-        """
-            a helper func to simplify user action.
-        """
-        #TODO roll back
-        self.lunch.add_order()
-        self.dinner.add_order()
-        if (self.lunch.msgType == _LUNCH_OK
-                and self.dinner.msgType == _DINNER_OK):
-            return True
-        else:
-            self.msgType = _TWO_MEALS_NOT_OK
-            return []
 
 
 #@login_required
 @ajax_view(method="POST")
 def add_order(request):
-    """ Create user order.
-        User can create an order one day.
-    """
+    """ Create user order."""
+    messages = []
     postdata = request.POST.copy()
-    response = {'success': 'False'}
-    #TODO check user input
-    timeMap = {
-        1: LunchTime,
-        2: DinnerTime,
-        3: TwomealsTime
-    }
-    currentTime = timeMap[int(postdata['offertime_type'])](request)
 
-    if currentTime.add_order():
-        response.update({'msgType': currentTime.get_message_type(),
-                         'success': 'True'})
-    else:
-        response.update({'msgType': currentTime.get_message_type()})
+    for offertime_type in postdata.getlist("offertime_type[]"):
+        offer_type = Offertype(request.user, int(offertime_type))
+        offer_type.add_order()
+        messages.append(offer_type.get_message())
 
-    response = simplejson.dumps(response)
+    response = simplejson.dumps({'messageArr': messages})
 
     return HttpResponse(response, mimetype='application/json')
 
 
-#TODO more friendly
+#TODO use bread_crumb !
 def list_order(request, template_name="orders/index.html"):
                #list_type="lunch"):
     """ list today orders"""
     now = datetime.now()
 
-    forenoon_start = datetime.combine(now, time(0, 0, 0, 0))
-    forenoon_end = datetime.combine(now, time(12, 0, 0, 0))
-
-    afternoon_start = datetime.combine(now, time(0, 0, 0, 0))
-    afternoon_end = datetime.combine(now, time(23, 59, 59, 99999))
-
-    if forenoon_start <= now <= forenoon_end:
-        ##lunch time
-        currentTime = LunchTime(request)
-    elif afternoon_start <= now <= afternoon_end:
-        ##dinner time
-        currentTime = DinnerTime(request)
-    else:
-        currentTime = LunchTime(request)
     return currentTime.list_order(template_name)
-
-
-#@login_required
-#@ajax_view(method="POST")
-#def update_order(request, order_id=''):
-    #""" update user order """
-    #postdata = request.POST.copy()
-    #response = {'success': 'True'}
-
-    #start_date = timezone.now().date()
-    #end_date = start_date + timedelta(days=1)
-    #orderSet = Order.objects.filter(date__range=(start_date, end_date),
-                                    #user=request.user)
-
-    ##time range
-    #if orderSet:
-        #order = orderSet[0]
-        #order.order_type = postdata['offertime_type']
-        #order.save()
-    #else:
-        ##create a new one?
-        #response.update({'success': 'False'})
-
-    #response = simplejson.dumps(response)
-    #return HttpResponse(response, mimetype='application/json')
-
-
-#@ajax_view()
-#def get_order(request):
-    #""" get user's today order"""
-    #result = {'success': 'False'}
-
-    #if request.is_ajax():
-        #start_date = timezone.now().date()
-        #end_date = start_date + timedelta(days=1)
-        #orderSet = Order.objects.filter(date__range=(start_date, end_date),
-                                        #user=request.user)
-
-        ##print orderSet
-        #if orderSet:
-            #result.update({'success': 'True',
-                           #'order_type': orderSet[0].order_type})
-        #result = simplejson.dumps(result)
-        #return HttpResponse(result, mimetype='application/json')
-    #else:
-        #return HttpResponseRedirect('/')
-
-
-#just disable this feature.
-#def delete_order(request):
-    #response = {'success': 'True'}
-
-    #start_date = timezone.now().date()
-    #end_date = start_date + timedelta(days=1)
-    #orderSet = Order.objects.filter(date__range=(start_date, end_date),
-                                    #user=request.user)
-
-    #if orderSet:
-        ##exit one ,just update it
-        #orderSet[0].delete()
-    #else:
-        #response.update({'success': 'False', 'msg': 'item not exit'})
-
-    #response = simplejson.dumps(response)
-    #return HttpResponse(response, mimetype='application/json')
