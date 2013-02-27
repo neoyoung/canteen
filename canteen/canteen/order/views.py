@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
+#--------------------------------------------------
+#TODO more dynamic
+#--------------------------------------------------
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core import urlresolvers
@@ -12,12 +15,11 @@ from django.contrib.auth.decorators import login_required
 #
 from django.utils.safestring import mark_safe
 from django.utils.decorators import available_attrs
-from functools import wraps
-#
 from django.db.models import Q
-
+#
+from functools import wraps
 from datetime import timedelta, datetime, time
-
+#for debug
 from django.db import connection
 
 from canteen.order.models import Order
@@ -127,7 +129,9 @@ class TimeInterface(object):
     #some helper funcs
     def _get_date_range(self):
         start_time, end_time = self._get_timerange()
-        start_datetime = datetime.combine(datetime.now(), start_time)
+        #make timezone aware
+        start_datetime = datetime.combine(datetime.now(), start_time)\
+            .replace(tzinfo=timezone.get_current_timezone())
         end_datetime = datetime.combine(start_datetime, end_time)
 
         return (start_datetime, end_datetime)
@@ -315,65 +319,65 @@ def list_order(request, template_name="orders/index.html"):
 
 
 #@login_required
-@ajax_view(method="POST")
-def update_order(request, order_id=''):
-    """ update user order """
-    postdata = request.POST.copy()
-    response = {'success': 'True'}
+#@ajax_view(method="POST")
+#def update_order(request, order_id=''):
+    #""" update user order """
+    #postdata = request.POST.copy()
+    #response = {'success': 'True'}
 
-    start_date = timezone.now().date()
-    end_date = start_date + timedelta(days=1)
-    orderSet = Order.objects.filter(date__range=(start_date, end_date),
-                                    user=request.user)
+    #start_date = timezone.now().date()
+    #end_date = start_date + timedelta(days=1)
+    #orderSet = Order.objects.filter(date__range=(start_date, end_date),
+                                    #user=request.user)
 
-    #time range
-    if orderSet:
-        order = orderSet[0]
-        order.order_type = postdata['offertime_type']
-        order.save()
-    else:
-        #create a new one?
-        response.update({'success': 'False'})
+    ##time range
+    #if orderSet:
+        #order = orderSet[0]
+        #order.order_type = postdata['offertime_type']
+        #order.save()
+    #else:
+        ##create a new one?
+        #response.update({'success': 'False'})
 
-    response = simplejson.dumps(response)
-    return HttpResponse(response, mimetype='application/json')
+    #response = simplejson.dumps(response)
+    #return HttpResponse(response, mimetype='application/json')
 
 
-@ajax_view()
-def get_order(request):
-    """ get user's today order"""
-    result = {'success': 'False'}
+#@ajax_view()
+#def get_order(request):
+    #""" get user's today order"""
+    #result = {'success': 'False'}
 
-    if request.is_ajax():
-        start_date = timezone.now().date()
-        end_date = start_date + timedelta(days=1)
-        orderSet = Order.objects.filter(date__range=(start_date, end_date),
-                                        user=request.user)
+    #if request.is_ajax():
+        #start_date = timezone.now().date()
+        #end_date = start_date + timedelta(days=1)
+        #orderSet = Order.objects.filter(date__range=(start_date, end_date),
+                                        #user=request.user)
 
-        #print orderSet
-        if orderSet:
-            result.update({'success': 'True',
-                           'order_type': orderSet[0].order_type})
-        result = simplejson.dumps(result)
-        return HttpResponse(result, mimetype='application/json')
-    else:
-        return HttpResponseRedirect('/')
+        ##print orderSet
+        #if orderSet:
+            #result.update({'success': 'True',
+                           #'order_type': orderSet[0].order_type})
+        #result = simplejson.dumps(result)
+        #return HttpResponse(result, mimetype='application/json')
+    #else:
+        #return HttpResponseRedirect('/')
 
 
 #just disable this feature.
-def delete_order(request):
-    response = {'success': 'True'}
+#def delete_order(request):
+    #response = {'success': 'True'}
 
-    start_date = timezone.now().date()
-    end_date = start_date + timedelta(days=1)
-    orderSet = Order.objects.filter(date__range=(start_date, end_date),
-                                    user=request.user)
+    #start_date = timezone.now().date()
+    #end_date = start_date + timedelta(days=1)
+    #orderSet = Order.objects.filter(date__range=(start_date, end_date),
+                                    #user=request.user)
 
-    if orderSet:
-        #exit one ,just update it
-        orderSet[0].delete()
-    else:
-        response.update({'success': 'False', 'msg': 'item not exit'})
+    #if orderSet:
+        ##exit one ,just update it
+        #orderSet[0].delete()
+    #else:
+        #response.update({'success': 'False', 'msg': 'item not exit'})
 
-    response = simplejson.dumps(response)
-    return HttpResponse(response, mimetype='application/json')
+    #response = simplejson.dumps(response)
+    #return HttpResponse(response, mimetype='application/json')

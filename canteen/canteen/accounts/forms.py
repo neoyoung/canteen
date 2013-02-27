@@ -17,12 +17,11 @@ class RegistrationForm(UserCreationForm):
         capturing the email on registration.
     """
     password1 = forms.RegexField(
-        label=_("Password"), regex=r'^(?=.*\W+).*$',
+        label=_("Password"), regex=r'^(?=.*).*$',
         help_text=_(
-            'Password must be six characters long and contain \
-            at least one non-alphanumeric character.'),
+            'Password must be six characters long .'),
         widget=forms.PasswordInput, min_length=6)
     password2 = forms.RegexField(label=_("Password confirmation"),
-                                 regex=r'^(?=.*\W+).*$',
+                                 regex=r'^(?=.*).*$',
                                  widget=forms.PasswordInput, min_length=6)
     email = forms.EmailField(max_length="50", label=_("Email"))

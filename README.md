@@ -50,6 +50,7 @@ pip install -r requirments.rt
 
 ```shell
 cd path/to/prepare/canteen
+./manager syncdb
 ./manager runserver
 ```
 - now,go check the site at [locahost][3]

@@ -12,6 +12,7 @@ class MenuAdmin(admin.ModelAdmin):
     list_per_page = 20
     ordering = ['-last_updated']
     search_fields = ['name']
+    filter_vertical = ('foods',)
 
 # registers your menu model with the admin site
 admin.site.register(Menu, MenuAdmin)

@@ -28,3 +28,5 @@ urlpatterns = patterns(
 
 
 )
+
+handler404 = 'ecomstore.views.file_not_found_404'
