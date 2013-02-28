@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, tzinfo
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+
 
 Hours3 = timedelta(hours=3)
 
@@ -32,6 +34,11 @@ class OffertimeType(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        #import pdb
+        #pdb.set_trace()
+        return reverse('canteen.order.views.list_order', args=[int(self.offer_type)])
 
 
 class Menu(models.Model):

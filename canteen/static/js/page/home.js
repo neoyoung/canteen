@@ -50,7 +50,8 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
                    success = $('#ship-form .js-msg'),
                    radioContainer = $('#ship-form .js-container'),
                    user = new User(),
-                   defaultMessage = "<p>貌似出问题了，上水群找下管理猿吧=(</p><a class='close-reveal-modal'>&#215;</a>";
+                   defaultMessage = "<p>貌似出问题了，上水群找下管理猿吧=(</p><a class='close-reveal-modal'>&#215;</a>",
+                   blankError = "<p>E...你确定你选了=.=....</p><a class='close-reveal-modal'>&#215;</a>";
 
                //TODO handle the return code like 403, fail gracefully
                $('#ship').bind('click', function () {
@@ -70,7 +71,12 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
                       selected.push($(this).val());
                   });
 
-                  var data = { "offertime_type":selected, "key":"123"},
+                  if (selected.length === 0) {
+                     showReveal({target:"#success-confirm",msg:blankError});
+                     return false;
+                  }
+
+                  var data = { "offertime_type":selected},
                       posting = $.post("/order/add/",data);
                   
                   posting.done(function(data) {

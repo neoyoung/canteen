@@ -33,24 +33,6 @@ _400_ERROR = _ERROR_MSG % '400 Bad Request'
 _403_ERROR = _ERROR_MSG % '403 Forbidden'
 _405_ERROR = _ERROR_MSG % '405 Not Allowed'
 
-#TODO be more friendly =)
-_LUNCH_OK = 1  # 午餐预定成功
-_LUNCH_BOOK_ALREADY = 2  # 午餐已经预定过了
-#_LUNCH_OVERTIME = 3  # 非午餐预定时间
-
-#_DINNER_OK = 4  # 晚餐预定成功
-#_DINNER_BOOK_ALREADY = 5  # 晚餐已经预定过了
-#_DINNER_OVERTIME = 6  # 非晚餐预定时间
-
-#_TWO_MEALS_OK = 7
-#_TWO_MEALS_NOT_OK = 8
-
-#_DEFAULT_ERROR_CODE = 404  # error unknown
-
-#OFFERTIME_TYPE
-#_LUNCH_TYPE = 1
-#_DINNER_TYPE = 2
-
 
 #helper func
 def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
@@ -139,12 +121,14 @@ class Offertype(object):
         #make timezone aware
         start_datetime = datetime.combine(datetime.now(), start_time)\
             .replace(tzinfo=timezone.get_current_timezone())
-        end_datetime = datetime.combine(start_datetime, end_time)
+        end_datetime = datetime.combine(start_datetime, end_time)\
+            .replace(tzinfo=timezone.get_current_timezone())
 
         return (start_datetime, end_datetime)
 
     def _is_valid_time(self):
-        now = datetime.now().time()
+        now = datetime.now().replace(tzinfo=timezone.get_current_timezone())\
+            .time()
         offer_type = OffertimeType.objects.filter(
             offertime_start__lte=now,
             offertime_stop__gt=now,
@@ -171,6 +155,8 @@ class Offertype(object):
 
     #TODO seperate the error message ????
     def add_order(self):
+        import pdb
+        pdb.set_trace()
         if self._is_valid_time():
             order_menu = self._get_menu()
             if not self._is_book_already():
@@ -206,10 +192,25 @@ def add_order(request):
     return HttpResponse(response, mimetype='application/json')
 
 
-#TODO use bread_crumb !
-def list_order(request, template_name="orders/index.html"):
-               #list_type="lunch"):
+def list_order(request, template_name, offertime_type):
     """ list today orders"""
-    now = datetime.now()
+    today_end = datetime.combine(
+        datetime.now(), time(23, 59, 59, 99999))\
+        .replace(tzinfo=timezone.get_current_timezone())
 
-    return currentTime.list_order(template_name)
+    default_show = False
+
+    if offertime_type is None:
+        offertime_type = OffertimeType.objects\
+            .filter(is_active=True).order_by("offer_type")[0].offer_type
+        default_show = True
+
+    order_list = Order.objects.filter(
+        date__lte=today_end, is_active=True,
+        menu__offer_type__offer_type=offertime_type)
+
+    offer_type_list = OffertimeType.objects.filter(is_active=True)\
+        .order_by("offer_type")
+
+    return render_to_response(template_name, locals(),
+                              context_instance=RequestContext(request))

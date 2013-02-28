@@ -13,15 +13,17 @@ from datetime import *
 #third plugin
 #import tagging
 #from tagging.models import Tag, TaggedItem
-#
+
 from canteen.foods.models import Category, Food
 from canteen.menu.models import Menu, OffertimeType
 
 
 def index(request, template_name="foods/index.html"):
     """ site home page """
-    startTime = datetime.combine(datetime.now(), time(0, 0, 0, 0))
-    endTime = datetime.combine(datetime.now(), time(23, 59, 59, 999999))
+    startTime = datetime.combine(datetime.now(), time(0, 0, 0, 0))\
+        .replace(tzinfo=timezone.get_current_timezone())
+    endTime = datetime.combine(datetime.now(), time(23, 59, 59, 99999))\
+        .replace(tzinfo=timezone.get_current_timezone())
 
     today_menu = Menu.objects.filter(offertime__gte=startTime,
                                      offertime__lte=endTime)\

@@ -1,15 +1,13 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
 <div class="span6">
-   <h1 class="">
-      今日菜式
-   </h1>
    {% if today_menu %}
       {% for menu_set in today_menu%}
       <div>
-         <h4>{{ menu_set.name }}</h4>
+         <h4>{{ menu_set.show_name }}</h4>
          {% if menu_set.foods.all %}
          <ul class="inline food-list">
             {% for foods in menu_set.foods.all %}
@@ -23,7 +21,7 @@
 
          </ul>
          {% else %}
-         <p class="muted">还未添加美食</p>
+            <p class="muted">{% trans 'foods not ready yet'%}</p>
          {% endif %}  
       </div>
       {% if not forloop.last  %}
@@ -31,17 +29,17 @@
       {% endif %}
       {% endfor %}
    {% else %} 
-         <p class="muted">还未添加美食</p>
+   <p class="muted">{% trans 'foods not ready yet'  %}</p>
    {% endif %}
 
 </div>
 
 
-<div class="span2 offset2">
+<div class="span offset2">
 
    <form id="ship-form">
       <fieldset>
-         <legend>我的订餐</legend>
+         <legend>{% trans 'my menu table'  %}</legend>
 
          <div class="js-container">
             {% for type in typelist %}
@@ -53,7 +51,7 @@
 
          <div class="js-msg"></div>
 
-         <button type="submit" class="btn btn-small btn-primary float-r" id="ship">确定</button>
+         <button type="submit" class="btn btn-small btn-primary float-r" id="ship">{% trans 'confirm'  %}</button>
       </fieldset>
    </form>
 
@@ -61,8 +59,7 @@
 
 <div id="success-confirm" class="reveal-modal">
 </div>
-
-
+ 
 {% endblock %}
 
 {% block  css %}

@@ -10,6 +10,6 @@ urlpatterns = patterns(
         'add_order', {}, 'add_order'),
     #url(r'^delete/$',
     #'delete_order',{}, 'delete_order'),
-    url(r'^list/$', 'list_order',
-        {}, 'list_order'),
+    url(r'^list/(?P<offertime_type>\d+)*$', 'list_order',
+        {"template_name": "orders/index.html"}, 'list_order'),
 )

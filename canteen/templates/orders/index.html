@@ -1,30 +1,31 @@
 {% extends "base.html" %}
-{% load order_extra %}
+{% load i18n %}
 
 {% block content %}
-<table class="table table-striped {% if not orderList %} empty {% endif %}" summary="Today order list" id="order_list">
+{% include "tags/offertime_type_link.html"  %}
+<table class="table table-striped {% if not order_list %} empty {% endif %}" summary="Today order list" id="order_list">
 
-   <caption>今天订单列表</caption>
+   <caption>{% trans 'today order list'  %}</caption>
    <thead>
       <tr>
          <th>#</th>
-         <th>大名</th>
-         <th>订餐类型</th>
-         <th>时间</th>
+         <th>{% trans 'name'  %}</th>
+         <th>{% trans 'order type'  %}</th>
+         <th>{% trans 'time'  %}</th>
       </tr>
    </thead>
    <tbody>
-      {% for order in orderList %}
+      {% for order in order_list %}
       <tr>
          <td>{{ forloop.counter }}</td>
          <td>{{ order.user.username }}</td>
-         <td>{{ order.menu.offer_type.offer_type|switchType}}</td>
+         <td>{{ order.menu.offer_type.name }}</td>
          <td>{{ order.date|date:"H:s a" }}</td>
       </tr>
       {% empty %}
       <tr>
          <td colspan="4" >
-            <span class="muted">貌似还没有人订餐</span> <a href="/" >去定个吧=)</a>
+            <span class="muted">{% trans 'no one has orderd' %}</span>
          </td>
       </tr>
       {% endfor %}

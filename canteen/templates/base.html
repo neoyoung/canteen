@@ -1,13 +1,11 @@
-<!--header-->
+{% load i18n  %}
 <!DOCTYPE html>
 <html lang="zh-cn">
    <head>
       <meta charset="UTF-8">
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <link href="{{ STATIC_URL }}css/widget/bootstrap.css" rel="stylesheet" media="screen">
-      <!--<link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet" media="screen">-->
       <link href="{{ STATIC_URL  }}css/basic/base.css" rel="stylesheet" type="text/css"/>
-
 
       {% block css %}{% endblock %}
 
@@ -15,7 +13,6 @@
       <title>{% block title %}{% if page_title %}{{ page_title }} - {% endif %}{{ site_name }}{% endblock %}</title>
       <meta name="keywords" content="{{ meta_keywords }}" />
       <meta name="description" content="{{ meta_description }}" />
-      <!--<meta name="verify-v1" content="bPjaC6MIttNNSgZfZXROVZ4RPbKJkyv7rAM2sOuUWk0=" /> -->
    </head>
 
    <body>
@@ -24,12 +21,12 @@
       <nav class="navbar-inner">
 
       <div class="container">
-         <a href="/" class="brand">175Game' Canteen</a>
+         <a href="/" class="brand">{% trans "175Game' Canteen" %}</a>
          <div class="nav-collapse collapse">
             <ul class="nav">
-               <li class=""><a href="{% url foods.views.index %}">今日菜单</a></li>
+               <li class=""><a href="{% url foods.views.index %}">{% trans "today menu"  %}</a></li>
 
-               <li class=""><a href="{% url order.views.list_order %}">订餐列表</a></li>
+               <li class=""><a href="{% url order.views.list_order %}">{% trans "order list"  %}</a></li>
 
                {% if user.is_authenticated %}
                <li class="">
@@ -37,15 +34,15 @@
                </li>
 
                <li> 
-               <a href="{% url django.contrib.auth.views.logout %}">退出</a>
+               <a href="{% url django.contrib.auth.views.logout %}">{% trans "logout"  %}</a>
                </li>
                {% else %}
                <li>
-               <a href="{% url register %}">注册</a>
+               <a href="{% url register %}">{% trans "register"  %}</a>
                </li>
 
                <li>
-               <a href="{% url django.contrib.auth.views.login %}">登录</a>
+               <a href="{% url django.contrib.auth.views.login %}">{% trans "login"  %}</a>
                {% endif %}
             </ul>
          </div>
