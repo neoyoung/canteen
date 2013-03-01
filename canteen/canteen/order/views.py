@@ -127,11 +127,12 @@ class Offertype(object):
         return (start_datetime, end_datetime)
 
     def _is_valid_time(self):
-        now = datetime.now().replace(tzinfo=timezone.get_current_timezone())\
-            .time()
+        now_time = datetime.time(
+            datetime.now().replace(tzinfo=timezone.get_current_timezone())
+        )
         offer_type = OffertimeType.objects.filter(
-            offertime_start__lte=now,
-            offertime_stop__gt=now,
+            offertime_start__lte=now_time,
+            offertime_stop__gt=now_time,
             offer_type=self.offertime_type
         )
 
@@ -155,8 +156,6 @@ class Offertype(object):
 
     #TODO seperate the error message ????
     def add_order(self):
-        import pdb
-        pdb.set_trace()
         if self._is_valid_time():
             order_menu = self._get_menu()
             if not self._is_book_already():
@@ -194,8 +193,8 @@ def add_order(request):
 
 def list_order(request, template_name, offertime_type):
     """ list today orders"""
-    today_end = datetime.combine(
-        datetime.now(), time(23, 59, 59, 99999))\
+    today_start = datetime.combine(
+        datetime.now(), time(0, 0, 0, 0))\
         .replace(tzinfo=timezone.get_current_timezone())
 
     default_show = False
@@ -206,7 +205,7 @@ def list_order(request, template_name, offertime_type):
         default_show = True
 
     order_list = Order.objects.filter(
-        date__lte=today_end, is_active=True,
+        date__gte=today_start, is_active=True,
         menu__offer_type__offer_type=offertime_type)
 
     offer_type_list = OffertimeType.objects.filter(is_active=True)\

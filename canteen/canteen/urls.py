@@ -28,5 +28,7 @@ urlpatterns = patterns(
 
 )
 
-#handler404 = 'canteen.views.file_not_found_404'
-#handler500 = 'canteen.views.server_error_500'
+#
+
+handler404 = 'canteen.views.file_not_found_404'
+handler500 = 'canteen.views.server_error_500'
