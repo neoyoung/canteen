@@ -19,6 +19,10 @@ Feature
 - order list
 - foods and menu management
 
+DEMO
+----
+[sina SAE][4]
+
 TODO
 ----
 - food comment/Tag
@@ -68,3 +72,4 @@ It's a demo based on serveral project,go check it if you want to know more.
 [1]: http://www.amazon.com/Beginning-Django-E-Commerce-Experts-Development/dp/1430225351
 [2]: https://github.com/willerce/aidingcan
 [3]: http://localhost:8000
+[4]: http://zhkzyth2.sinaapp.com/
