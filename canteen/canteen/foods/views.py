@@ -1,4 +1,6 @@
-# Create your views here.
+#TODO to be implemented
+from datetime import datetime, timedelta
+
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.utils import timezone
@@ -6,13 +8,6 @@ from django.core import urlresolvers
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
-from django.utils import simplejson
-from datetime import datetime, timedelta
-#python lib
-from datetime import *
-#third plugin
-#import tagging
-#from tagging.models import Tag, TaggedItem
 
 from canteen.foods.models import Category, Food
 from canteen.menu.models import Menu, OffertimeType

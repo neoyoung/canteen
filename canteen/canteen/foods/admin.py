@@ -15,8 +15,6 @@ class FoodAdmin(admin.ModelAdmin):
                      'meta_keywords', 'meta_description']
     #exclude = ('created_at', 'updated_at',)
     readonly_fields = ('created_at', 'updated_at',)
-    # sets up slug to be generated from food name
-    #prepopulated_fields = {'slug': ('name',)}
 
 # registers your food model with the admin site
 admin.site.register(Food, FoodAdmin)
