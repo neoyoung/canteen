@@ -1,4 +1,3 @@
-# Create your views here.
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template import RequestContext
@@ -6,6 +5,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
+
+import time
 
 from canteen.accounts.forms import RegistrationForm
 
@@ -39,7 +40,26 @@ def my_account(request, template_name="registration/my_account.html"):
     """ page displaying user account information,
         past order list and account options """
     page_title = 'My Account'
-    #orders = Order.objects.filter(user=request.user)
     name = request.user.username
     return render_to_response(template_name, locals(),
                               context_instance=RequestContext(request))
+
+class IpLoginBackend(object):
+
+    # This is called by the standard Django login procedure
+    def authenticate(self, username=None, password=None):
+        try:
+            # Check if the user exists in Django's local database
+            user = User.objects.get(email=username)
+        except User.DoesNotExist:
+            # Create a user in Django's local database
+            user = User.objects.create_user(time.time(), username, 'passworddoesntmatter')
+
+        return user
+
+    # Required for your backend to work properly - unchanged in most scenarios
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None

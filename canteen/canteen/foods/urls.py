@@ -1,5 +1,4 @@
-from django.conf.urls import patterns, include, url
-#from canteen import settings
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     'canteen.foods.views',

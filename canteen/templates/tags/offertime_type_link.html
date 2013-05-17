@@ -1,10 +1,10 @@
 <ul class="nav nav-pills">
 
    {% for offer_type in offer_type_list %}
-      {% if forloop.first and default_show %}
+      {% if default_show and forloop.first %}
          <li class="active">
       {% else  %}
-      {% ifequal offer_type.get_absolute_url request.path  %}
+         {% ifequal offer_type.get_absolute_url request.path  %}
          <li class="active">
          {% else %}
          <li class="">
@@ -12,7 +12,6 @@
       {% endif %}
          <a href="{{ offer_type.get_absolute_url }}">{{ offer_type.name  }}</a>
       </li>
-
-      {% endfor  %}
+   {% endfor  %}
 
  </ul>

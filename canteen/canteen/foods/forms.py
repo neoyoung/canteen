@@ -12,7 +12,7 @@ class FoodAdminForm(forms.ModelForm):
 
 
 class FoodReviewForm(forms.ModelForm):
-    """ Form class to submit a new ProductReview instance """
+    """ Form class to submit a new FoodReview instance """
     class Meta:
         model = FoodReview
         exclude = ('user', 'food', 'is_approved')

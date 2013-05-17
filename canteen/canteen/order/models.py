@@ -22,7 +22,6 @@ class Order(BaseOrderInfo):
         verbose_name_plural = 'orders'
 
     #order info
-    #date = models.DateTimeField(default=datetime.datetime.now(CST()))
     date = models.DateTimeField(default=timezone.now())
     menu = models.ForeignKey(Menu)
     is_active = models.BooleanField(default=True)

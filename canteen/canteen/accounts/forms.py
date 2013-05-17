@@ -2,13 +2,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-#from ecomstore.accounts.models import UserProfile
-
-#class UserProfileForm(forms.ModelForm):
-    #class Meta:
-        #model = UserProfile
-        #exclude = ('user',)
-
 
 class RegistrationForm(UserCreationForm):
     """ subclass of Django's UserCreationForm, to handle customer registration

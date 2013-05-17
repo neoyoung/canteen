@@ -274,3 +274,6 @@ EMAIL_HOST_PASSWORD = ''
 
 # Port for sending email.
 EMAIL_PORT = 587
+
+#custom login func
+AUTHENTICATION_BACKENDS = ( 'canteen.accounts.views.IpLoginBackend', )

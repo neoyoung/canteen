@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
 from django.db import models
 from django.http import Http404
 from canteen import settings
 from django.contrib.auth.models import User
-#from django.utils.translation import ugettext_lazy as _
-import tagging
 
 
-#keep this for future extension
 class ActiveCategoryManager(models.Manager):
     """ Manager class to return only those categories
         where each instance is active """
@@ -52,10 +48,6 @@ class Category(models.Model):
     def get_absolute_url(self):
         return ('catalog_category', (), {'category_slug': self.slug})
 
-    #@property
-    #def cache_key(self):
-        #return self.get_absolute_url()
-
 
 class ActiveFoodManager(models.Manager):
     """ Manager class to return only
@@ -90,7 +82,6 @@ class Food(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    #time_at = models.DateField(auto_now=True, editable=True)
     categories = models.ManyToManyField(Category, blank=True)
 
     # image fields require a varchar(100) in db
@@ -113,11 +104,6 @@ class Food(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('catalog_food', (), {'food_slug': self.slug})
-
-try:
-    tagging.register(Food)
-except tagging.AlreadyRegistered:
-    pass
 
 
 class ActiveFoodReviewManager(models.Manager):

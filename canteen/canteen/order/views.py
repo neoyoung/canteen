@@ -1,26 +1,17 @@
-#!/usr/bin/env python
-# encoding: utf-8
-#--------------------------------------------------
-#TODO more dynamic
-#--------------------------------------------------
+#encoding: utf-8
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.core import urlresolvers
-from django.http import HttpResponseRedirect, HttpResponse,\
+from django.http import HttpResponse,\
     HttpResponseNotAllowed, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.models import User
-from django.utils import simplejson, timezone
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-#
 from django.utils.safestring import mark_safe
 from django.utils.decorators import available_attrs
+from django.utils import simplejson, timezone
 from django.db.models import Q
-#
+
 from functools import wraps
 from datetime import timedelta, datetime, time
-#for debug
-from django.db import connection
 
 from canteen.order.models import Order
 from canteen.menu.models import Menu, OffertimeType
@@ -34,7 +25,7 @@ _403_ERROR = _ERROR_MSG % '403 Forbidden'
 _405_ERROR = _ERROR_MSG % '405 Not Allowed'
 
 
-#helper func
+#ajax helper func
 def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
               ajax_required=True, json_form_errors=False):
     """
@@ -118,7 +109,6 @@ class Offertype(object):
 
     def _get_date_range(self):
         start_time, end_time = self._get_timerange()
-        #make timezone aware
         start_datetime = datetime.combine(datetime.now(), start_time)\
             .replace(tzinfo=timezone.get_current_timezone())
         end_datetime = datetime.combine(start_datetime, end_time)\
@@ -174,7 +164,6 @@ class Offertype(object):
         return {}
 
 
-#@login_required
 @ajax_view(method="POST")
 def add_order(request):
     """ Create user order."""

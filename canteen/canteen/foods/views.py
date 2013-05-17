@@ -1,5 +1,5 @@
 #TODO to be implemented
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -9,7 +9,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
-from canteen.foods.models import Category, Food
 from canteen.menu.models import Menu, OffertimeType
 
 
