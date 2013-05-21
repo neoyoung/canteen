@@ -49,8 +49,8 @@ class IpLoginBackend(object):
     # This is called by the standard Django login procedure
     def authenticate(self, username=None, password=None):
         try:
-            # Check if the user exists in Django's local database
-            user = User.objects.get(email=username)
+            # Check if the request_ip exists in Whitelist table
+            user = WhiteList.objects.get(ip=request.)
         except User.DoesNotExist:
             # Create a user in Django's local database
             user = User.objects.create_user(time.time(), username, 'passworddoesntmatter')
