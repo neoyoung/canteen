@@ -26,7 +26,7 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
       function ($,jqueryReveal,bootstrap,base,User) {
 
          $(function() {
-            
+
             //wrap one more level .
             function showReveal(options){
                var defaults = {
@@ -61,12 +61,12 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
 
 
 
-                  if ( !user.isLogin() ) {
-                     //redirect to the login page
-                     window.location = '/accounts/login';
-                     return false;
-                  }
-                  
+                  // if ( !user.isLogin() ) {
+                  //    //redirect to the login page
+                  //    window.location = '/accounts/login';
+                  //    return false;
+                  // }
+
                   $('#ship-form input:checked').each(function() {
                       selected.push($(this).val());
                   });
@@ -78,7 +78,7 @@ requirejs(['jquery', 'jqueryReveal', 'bootstrap','../util/base','../user/User'],
 
                   var data = { "offertime_type":selected},
                       posting = $.post("/order/add/",data);
-                  
+
                   posting.done(function(data) {
 
                      for (var i = 0; i < data.messageArr.length; i += 1) {

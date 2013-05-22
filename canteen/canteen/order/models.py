@@ -16,11 +16,6 @@ class BaseOrderInfo(models.Model):
 
 class Order(BaseOrderInfo):
     """ model class for storing a user order instance """
-    class Meta:
-        db_table = 'order'
-        ordering = ['date']
-        verbose_name_plural = 'orders'
-
     #order info
     date = models.DateTimeField(default=timezone.now())
     menu = models.ForeignKey(Menu)
@@ -28,6 +23,13 @@ class Order(BaseOrderInfo):
     ip_address = models.IPAddressField(blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
+
+
+    class Meta:
+        db_table = 'order'
+        ordering = ['date']
+        verbose_name_plural = 'orders'
+
 
     def __unicode__(self):
         return u'Order #' + str(self.id)

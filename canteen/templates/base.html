@@ -32,17 +32,6 @@
                <li class="">
                   <a href='{%  url my_account %}' id="username">{{ user.username  }}</a>
                </li>
-
-               <li> 
-               <a href="{% url django.contrib.auth.views.logout %}">{% trans "logout"  %}</a>
-               </li>
-               {% else %}
-               <li>
-               <a href="{% url register %}">{% trans "register"  %}</a>
-               </li>
-
-               <li>
-               <a href="{% url django.contrib.auth.views.login %}">{% trans "login"  %}</a>
                {% endif %}
             </ul>
          </div>
@@ -52,7 +41,7 @@
       </header>
       <div id="wrap">
 
-         <div class="container content"> 
+         <div class="container content">
 
 
             <!--body-->
@@ -70,4 +59,3 @@
       {% block script %}{% endblock %}
    </body>
 </html>
-

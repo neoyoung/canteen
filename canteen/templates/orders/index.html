@@ -20,7 +20,7 @@
          <td>{{ forloop.counter }}</td>
          <td>{{ order.user.username }}</td>
          <td>{{ order.menu.offer_type.name }}</td>
-         <td>{{ order.date|date:"H:s a" }}</td>
+         <td>{{ order.date|date:"P" }}</td>
       </tr>
       {% empty %}
       <tr>

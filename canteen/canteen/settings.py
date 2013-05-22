@@ -116,9 +116,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    #server proxy x-forward
+    'canteen.utils.http.SetRemoteAddrFromForwardedFor',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    #IP check and login
+    'canteen.accounts.middleware.IpLoginMiddleware',
     #add the debug tool
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -159,8 +162,6 @@ INSTALLED_APPS = (
     'canteen.utils',
     #
     'canteen.order',
-    #
-    'canteen.remember_me',
     #menu support
     'canteen.menu',
 )
@@ -275,5 +276,10 @@ EMAIL_HOST_PASSWORD = ''
 # Port for sending email.
 EMAIL_PORT = 587
 
-#custom login func
-AUTHENTICATION_BACKENDS = ( 'canteen.accounts.views.IpLoginBackend', )
+# Implement our auth
+AUTHENTICATION_BACKENDS = (
+    #for customer
+    'canteen.accounts.views.IpLoginBackend',
+    #for super user
+    'django.contrib.auth.backends.ModelBackend',
+)
