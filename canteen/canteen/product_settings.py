@@ -122,8 +122,6 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #IP check and login
     'canteen.accounts.middleware.IpLoginMiddleware',
-    #add the debug tool
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'canteen.urls'
@@ -152,8 +150,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     #food taging
     'tagging',
-    #use to trace the sql
-    'debug_toolbar',
     #foods
     'canteen.foods',
     #accounts management
@@ -198,34 +194,9 @@ LOGGING = {
 }
 
 
-#config for the debug-tool
-INTERNAL_APPS = ('127.0.0.1',)
-
 
 def custom_show_toolbar(request):
     return True  # Always show toolbar, for example purposes only.
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-    #'EXTRA_SIGNALS': [''],
-    'HIDE_DJANGO_SQL': False,
-    'TAG': 'div',
-    'ENABLE_STACKTRACES': True,
-}
-
-#debug panel for configuration
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-)
 
 
 #TODO try the ssh connection
@@ -241,7 +212,6 @@ ENABLE_SSH = False
 # only parameter and returns a dictionary to add to the context.
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
