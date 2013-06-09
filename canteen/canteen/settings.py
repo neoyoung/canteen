@@ -3,7 +3,7 @@
 
 from socket import gethostname
 
-production_hosts = ['freebsd_9.0-195']
+production_hosts = ['frebsd_9.0-195']
 hostname = gethostname()
 
 if hostname not in production_hosts:
