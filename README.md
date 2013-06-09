@@ -18,6 +18,7 @@ Feature
 - meal select
 - order list
 - foods and menu management
+- whiteList for auth(for cp intern use )
 
 DEMO
 ----

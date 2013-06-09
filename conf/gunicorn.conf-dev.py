@@ -6,7 +6,7 @@ gunicorn.conf.py
 Created by <zhkzyth@gmail.com> on  6 09, 2013
 """
 import os
-ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+LOG_PATH = "/home/zhkzyth/codeRep/canteen/log/"
 
 def numCPUS():
     if not hasattr(os,"sysconf"):
@@ -18,5 +18,5 @@ workers = numCPUS()*2 + 1
 bind = "127.0.0.1:8000"
 pidfile = "/tmp/gunicorn-demo.pid"
 backlog = 2048
-logfile = ROOT_PATH + "/log/gunicorn_demo.log"
+logfile = LOG_PATH + "gunicorn_dev.log"
 loglevel = "info"
