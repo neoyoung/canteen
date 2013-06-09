@@ -13,7 +13,7 @@ def numCPUS():
         raise RuntimeError("No sysconf detected.")
     return os.sysconf("SC_NPROCESSORS_ONLN")
 
-user="admin"
+user="zhkzyth"
 workers = numCPUS()*2 + 1
 bind = "127.0.0.1:8000"
 pidfile = "/tmp/gunicorn-demo.pid"
