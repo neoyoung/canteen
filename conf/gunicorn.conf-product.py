@@ -6,7 +6,7 @@ gunicorn.conf.py
 Created by <zhkzyth@gmail.com> on  6 09, 2013
 """
 import os
-LOG_PATH = "/Users/admin/code/canteen/log/"
+LOG_PATH = "/home/zhkzyth/codeRep/canteen/log/"
 
 def numCPUS():
     if not hasattr(os,"sysconf"):
