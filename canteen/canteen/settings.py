@@ -164,6 +164,8 @@ INSTALLED_APPS = (
     'canteen.order',
     #menu support
     'canteen.menu',
+    #gunicorn
+    'gunicorn',
 )
 
 # A sample logging configuration. The only tangible logging

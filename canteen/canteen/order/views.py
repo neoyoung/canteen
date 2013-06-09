@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse,\
-    HttpResponseNotAllowed, HttpResponseForbidden, HttpResponseBadRequest
+        HttpResponseNotAllowed, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.safestring import mark_safe
@@ -27,7 +27,7 @@ _405_ERROR = _ERROR_MSG % '405 Not Allowed'
 
 #ajax helper func
 def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
-              ajax_required=True, json_form_errors=False):
+        ajax_required=True, json_form_errors=False):
     """
     usage:
         @ajax_view
@@ -42,35 +42,35 @@ def ajax_view(function=None, FormClass=None, method="GET", login_required=True,
         def _ajax_view(request, *args, **kwargs):
             if request.method != method and method != 'REQUEST':
                 return HttpResponseNotAllowed(
-                    mark_safe(_405_ERROR % ("Request must be a %s." % method)))
-            if ajax_required and not request.is_ajax():
-                return HttpResponseForbidden(
-                    mark_safe(_403_ERROR % "Request must be set via AJAX."))
-            if login_required and not request.user.is_authenticated():
-                return HttpResponseForbidden(
-                    mark_safe(_403_ERROR % "Login required"))
+                        mark_safe(_405_ERROR % ("Request must be a %s." % method)))
+                if ajax_required and not request.is_ajax():
+                    return HttpResponseForbidden(
+                            mark_safe(_403_ERROR % "Request must be set via AJAX."))
+                    if login_required and not request.user.is_authenticated():
+                        return HttpResponseForbidden(
+                                mark_safe(_403_ERROR % "Login required"))
 
-            if FormClass:
-                f = FormClass(getattr(request, method))
+                        if FormClass:
+                            f = FormClass(getattr(request, method))
 
                 if not f.is_valid():
                     if json_form_errors:
                         errors = dict((k, [unicode(x) for x in v])
-                                      for k, v in f.errors.items())
+                                for k, v in f.errors.items())
                         return HttpResponse(
-                            simplejson.dumps(
-                                {'error': 'form', 'errors': errors}),
-                            'application/json'
-                        )
+                                simplejson.dumps(
+                                    {'error': 'form', 'errors': errors}),
+                                'application/json'
+                                )
                     else:
                         return HttpResponseBadRequest(
-                            mark_safe(
-                                _400_ERROR % (
-                                    'Invalid form<br />' + f.errors.as_ul()
+                                mark_safe(
+                                    _400_ERROR % (
+                                        'Invalid form<br />' + f.errors.as_ul()
+                                        )
+                                    )
                                 )
-                            )
-                        )
-                request.form = f
+                        request.form = f
             return view_func(request, *args, **kwargs)
         return _ajax_view
 
@@ -92,7 +92,7 @@ class Offertype(object):
             return self.menu
         else:
             menu = Menu.objects.filter(
-                offer_type__offer_type=self.offertime_type)[0]
+                    offer_type__offer_type=self.offertime_type)[0]
             if menu:
                 self.menu = menu
                 return menu
@@ -101,7 +101,7 @@ class Offertype(object):
 
     def _get_timerange(self):
         offer_type_info = OffertimeType.objects.filter(
-            offer_type=self.offertime_type)[0]
+                offer_type=self.offertime_type)[0]
         start_datetime = offer_type_info.offertime_start
         end_datetime = offer_type_info.offertime_stop
 
@@ -110,21 +110,21 @@ class Offertype(object):
     def _get_date_range(self):
         start_time, end_time = self._get_timerange()
         start_datetime = datetime.combine(datetime.now(), start_time)\
-            .replace(tzinfo=timezone.get_current_timezone())
+                .replace(tzinfo=timezone.get_current_timezone())
         end_datetime = datetime.combine(start_datetime, end_time)\
-            .replace(tzinfo=timezone.get_current_timezone())
+                .replace(tzinfo=timezone.get_current_timezone())
 
         return (start_datetime, end_datetime)
 
     def _is_valid_time(self):
         now_time = datetime.time(
-            datetime.now().replace(tzinfo=timezone.get_current_timezone())
-        )
+                datetime.now().replace(tzinfo=timezone.get_current_timezone())
+                )
         offer_type = OffertimeType.objects.filter(
-            offertime_start__lte=now_time,
-            offertime_stop__gt=now_time,
-            offer_type=self.offertime_type
-        )
+                offertime_start__lte=now_time,
+                offertime_stop__gt=now_time,
+                offer_type=self.offertime_type
+                )
 
         if offer_type:
             return True
@@ -133,9 +133,9 @@ class Offertype(object):
 
     def _is_book_already(self):
         order = Order.objects.filter(
-            date__range=self._get_date_range(),
-            menu__offer_type__offer_type=self.offertime_type,
-            user=self.user)
+                date__range=self._get_date_range(),
+                menu__offer_type__offer_type=self.offertime_type,
+                user=self.user)
         return order
 
     def get_message(self):
@@ -183,22 +183,26 @@ def add_order(request):
 def list_order(request, template_name, offertime_type):
     """ list today orders"""
     today_start = datetime.combine(
-        datetime.now(), time(0, 0, 0, 0))\
-        .replace(tzinfo=timezone.get_current_timezone())
+            datetime.now(), time(0, 0, 0, 0))\
+                    .replace(tzinfo=timezone.get_current_timezone())
 
     default_show = False
 
     if offertime_type is None:
-        offertime_type = OffertimeType.objects\
-            .filter(is_active=True).order_by("offer_type")[0].offer_type
-        default_show = True
+        try:
+            offertime_type = OffertimeType.objects\
+                    .filter(is_active=True).order_by("offer_type")[0].offer_type_list
+            default_show = True
+            order_list = Order.objects.filter(
+                    date__gte=today_start, is_active=True,
+                    menu__offer_type__offer_type=offertime_type)
 
-    order_list = Order.objects.filter(
-        date__gte=today_start, is_active=True,
-        menu__offer_type__offer_type=offertime_type)
+            offer_type_list = OffertimeType.objects.filter(is_active=True)\
+                    .order_by("offer_type")
 
-    offer_type_list = OffertimeType.objects.filter(is_active=True)\
-        .order_by("offer_type")
+        except:
+            #TODO more friendly
+            pass
 
     return render_to_response(template_name, locals(),
-                              context_instance=RequestContext(request))
+            context_instance=RequestContext(request))
