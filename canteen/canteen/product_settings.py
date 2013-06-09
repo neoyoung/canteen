@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 #local config
