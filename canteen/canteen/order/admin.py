@@ -1,10 +1,12 @@
 from django.contrib import admin
-from canteen.order.models import Order
+from canteen.order.models import MenuOrder,ExerciseOrder
 
 
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'date', 'user')
-    list_filter = ('date',)
-    search_fields = ('date',)
+class MenuOrderAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(Order, OrderAdmin)
+class ExerciseOrderAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(MenuOrder, MenuOrderAdmin)
+admin.site.register(ExerciseOrder, ExerciseOrderAdmin)

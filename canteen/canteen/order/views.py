@@ -13,7 +13,7 @@ from django.db.models import Q
 from functools import wraps
 from datetime import timedelta, datetime, time
 
-from canteen.order.models import Order
+from canteen.order.models import MenuOrder
 from canteen.menu.models import Menu, OffertimeType
 
 #help message
@@ -132,7 +132,7 @@ class Offertype(object):
             return None
 
     def _is_book_already(self):
-        order = Order.objects.filter(
+        order = MenuOrder.objects.filter(
                 date__range=self._get_date_range(),
                 menu__offer_type__offer_type=self.offertime_type,
                 user=self.user)
@@ -149,7 +149,7 @@ class Offertype(object):
         if self._is_valid_time():
             order_menu = self._get_menu()
             if not self._is_book_already():
-                order = Order()
+                order = MenuOrder()
                 order.user = self.user
                 order.date = datetime.now()
                 order.menu = order_menu
@@ -191,18 +191,20 @@ def list_order(request, template_name, offertime_type):
     if offertime_type is None:
         try:
             offertime_type = OffertimeType.objects\
-                    .filter(is_active=True).order_by("offer_type")[0].offer_type_list
-            default_show = True
-            order_list = Order.objects.filter(
-                    date__gte=today_start, is_active=True,
-                    menu__offer_type__offer_type=offertime_type)
-
-            offer_type_list = OffertimeType.objects.filter(is_active=True)\
-                    .order_by("offer_type")
-
+                .filter(is_active=True).order_by("offer_type")[0].offer_type
         except:
             #TODO more friendly
             pass
+        finally:
+            default_show = True
+
+    order_list = MenuOrder.objects.filter(
+            date__gte=today_start, is_active=True,
+            menu__offer_type__offer_type=offertime_type)
+
+    offer_type_list = OffertimeType.objects.filter(is_active=True)\
+            .order_by("offer_type")
+
 
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))

@@ -5,3 +5,4 @@ local/*
 *.pyc
 canteen/media/*
 .Python
+canteen/static/admin/

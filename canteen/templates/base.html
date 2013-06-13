@@ -28,6 +28,8 @@
 
                <li class=""><a href="{% url order.views.list_order %}">{% trans "order list"  %}</a></li>
 
+               <li class=""><a href="{% url exercise.views.index %}">{% trans "exercise" %}</a></li>
+
                {% if user.is_authenticated %}
                <li class="">
                   <a href='{%  url my_account %}' id="username">{{ user.username  }}</a>

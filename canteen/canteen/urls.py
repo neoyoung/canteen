@@ -14,6 +14,9 @@ urlpatterns = patterns(
 
     # Order API
     url(r'^order/', include('canteen.order.urls')),
+    # exercise
+    url(r'^exercise/', include('canteen.exercise.urls')),
+
 )
 
 #exception page

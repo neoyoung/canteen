@@ -151,7 +151,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     #food taging
-    'tagging',
+    #'tagging',
     #use to trace the sql
     'debug_toolbar',
     #foods
@@ -164,7 +164,9 @@ INSTALLED_APPS = (
     'canteen.order',
     #menu support
     'canteen.menu',
-    #gunicorn
+    #
+    'canteen.exercise',
+    #gunicorn for production dev
     'gunicorn',
 )
 

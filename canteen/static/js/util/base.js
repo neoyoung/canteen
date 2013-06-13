@@ -5,8 +5,6 @@ define([
          //solve the csrf validate
          $('html').ajaxSend(function(event, xhr, settings) {
 
-            alert("test");
-
             function getCookie(name) {
 
                var cookieValue = null;
