@@ -117,7 +117,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     #server proxy x-forward
-    'canteen.utils.http.SetRemoteAddrFromForwardedFor',
+    'canteen.common.http.SetRemoteAddrFromForwardedFor',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #IP check and login
@@ -154,8 +154,6 @@ INSTALLED_APPS = (
     'canteen.foods',
     #accounts management
     'canteen.accounts',
-    #
-    'canteen.utils',
     #
     'canteen.order',
     #menu support
@@ -219,7 +217,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     #    'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     #
-    'canteen.utils.context_processors.canteen'
+    'canteen.common.context_processors.canteen'
 )
 
 #IF ENABLE SSL CONNECTION
