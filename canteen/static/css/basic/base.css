@@ -38,3 +38,7 @@ body {
 /*tips related*/
 .tips-error{
 }
+
+.empty td{
+   text-align:center;
+}

@@ -1,6 +1,9 @@
 .exercise{
-
 }
 
 .exercise .image-intro{
+}
+
+.exercise form{
+   display:inline;
 }

@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<div class="row-fluid">
+<div class="row-fluid exercise">
    {% if not exercise_list %}
    <p>{% trans "no exercise yet" %}
    {% else %}
@@ -15,7 +15,13 @@
             <h3>{{ exercise.name }}</h3>
             <p>报名时间：<span class="text-info">{{ exercise.offertime_start }}-{{ exercise.offertime_stop  }}</span></p>
             <p>{{ exercise.description }}</p>
-            <p><a class="btn btn-primary js-submit-btn" href="#">{% trans "报名" %}</a> </p>
+            <p>
+            <form action="/exercise/detail/" method="post">{% csrf_token %}
+               <input type="hidden" class="" value="{{ exercise.id  }}" name="exercise_type" %}" />
+               <input type="submit" class="btn btn-primary" value="{% trans "报名" %}" />
+            </form>
+            <a href="{% url exercise.views.detail exercise_type=exercise.id %}" class="muted">{% trans "看看报名情况" %}</a>
+            </p>
          </div>
       </div>
       </li>     
