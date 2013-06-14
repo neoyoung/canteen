@@ -51,8 +51,7 @@ class Menu(models.Model):
     offer_type = models.ForeignKey(OffertimeType)
     foods = models.ManyToManyField(Food, blank=True)
 
-    _now = timezone.now()
-    offertime = models.DateTimeField(default=_now)
+    offertime = models.DateField()
 
     last_updated = models.DateTimeField(auto_now=True)
 

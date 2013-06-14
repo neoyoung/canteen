@@ -15,6 +15,7 @@ from datetime import timedelta, datetime, time
 
 from canteen.order.models import MenuOrder
 from canteen.menu.models import Menu, OffertimeType
+from canteen.common.utils import get_now_date
 
 #help message
 _ERROR_MSG = """
@@ -92,10 +93,12 @@ class Offertype(object):
             return self.menu
         else:
             menu = Menu.objects.filter(
-                    offer_type__offer_type=self.offertime_type)[0]
+                    offer_type__offer_type=self.offertime_type,
+                    offertime__gte = get_now_date(),
+                    )
             if menu:
-                self.menu = menu
-                return menu
+                self.menu = menu[0]
+                return menu[0]
             else:
                 return []
 
@@ -120,6 +123,7 @@ class Offertype(object):
         now_time = datetime.time(
                 datetime.now().replace(tzinfo=timezone.get_current_timezone())
                 )
+
         offer_type = OffertimeType.objects.filter(
                 offertime_start__lte=now_time,
                 offertime_stop__gt=now_time,
@@ -142,24 +146,35 @@ class Offertype(object):
         return self.message
 
     def _set_message(self, content):
-        self.message = self._get_menu().name.encode('utf-8') + content
+        menu = self._get_menu()
+        result = ''
+        if not menu:
+            result = content
+        else:
+            result = menu.name.encode('utf-8') + content
+
+        self.message = result
 
     #TODO seperate the error message ????
     def add_order(self):
-        if self._is_valid_time():
-            order_menu = self._get_menu()
-            if not self._is_book_already():
-                order = MenuOrder()
-                order.user = self.user
-                order.date = datetime.now()
-                order.menu = order_menu
-                order.save()
-                self._set_message("预定成功拉。")
-                return order
+        order_menu = self._get_menu()
+        if order_menu:
+            if self._is_valid_time():
+                if not self._is_book_already():
+                    order = MenuOrder()
+                    order.user = self.user
+                    order.date = datetime.now()
+                    order.menu = order_menu
+                    order.save()
+                    self._set_message("预定成功拉。")
+                    return order
+                else:
+                    self._set_message("已经预定过拉。")
             else:
-                self._set_message("已经预定过拉。")
+                self._set_message("不在预定时间里哦。")
         else:
-            self._set_message("不在预定时间里哦。")
+            self._set_message("菜单貌似还没准备好。");
+
         #not valid or no such menu
         return {}
 
@@ -191,7 +206,7 @@ def list_order(request, template_name, offertime_type):
     if offertime_type is None:
         try:
             offertime_type = OffertimeType.objects\
-                .filter(is_active=True).order_by("offer_type")[0].offer_type
+                    .filter(is_active=True).order_by("offer_type")[0].offer_type
         except:
             #TODO more friendly
             pass

@@ -1,7 +1,6 @@
 from canteen.foods.models import Category
 from canteen import settings
 
-
 def canteen(request):
     """To show the Category as a sidebar"""
     return {
