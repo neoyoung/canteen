@@ -1,8 +1,9 @@
 [program:canteen]
 process_name = main-%(process_num)s
+directory = /home/zhkzyth/codeRep/canteen/
 command=/home/zhkzyth/.virtualenvs/demoproject/bin/python /home/zhkzyth/codeRep/canteen/canteen/manage.py run_gunicorn -c /home/zhkzyth/codeRep/canteen/conf/gunicorn.conf-dev.py 
 user=zhkzyth
-umask=022
 autostart=True
 autorestart=True
-redirect_stderr=True
+stdout_logfile = /Users/admin/code/canteen/log/gunicorn.log
+stderr_logfile = /Users/admin/code/canteen/log/gunicorn_err.log
