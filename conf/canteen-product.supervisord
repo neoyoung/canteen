@@ -1,21 +1,6 @@
-# -*- conf -*-
-[include]
-files = *.supervisor
-
-[supervisord]
-
-[supervisorctl]
-serverurl = unix://supervisord.sock
-
-[unix_http_server]
-file = supervisord.sock
-
-[rpcinterface:supervisor]
-supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
-
 [program:canteen]
 process_name = main-%(process_num)s
-command=/Users/admin/.virtualenvs/canteen/gunicorn_django -c /Users/admin/code/canteen/conf/gunicorn.conf-dev.py /Users/admin/code/canteen/canteen/canteen/debug_settings.py
+command=/home/zhkzyth/.virtualenvs/demoproject/bin/python /home/zhkzyth/codeRep/canteen/canteen/manage.py run_gunicorn -c /home/zhkzyth/codeRep/canteen/conf/gunicorn.conf-dev.py 
 user=admin
 umask=022
 autostart=True
