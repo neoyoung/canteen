@@ -1,0 +1,10 @@
+# -*- conf -*-
+[program:gunicorn]
+process_name = main-%(process_num)s
+directory = /Users/admin/code/canteen/
+command=/Users/admin/.virtualenvs/canteen/bin/python /Users/admin/code/canteen/canteen/manage.py run_gunicorn -c /Users/admin/code/canteen/conf/gunicorn.conf-dev.py 
+user=admin
+autostart=True
+autorestart=True
+stdout_logfile = /Users/admin/code/canteen/log/gunicorn.log
+stderr_logfile = /Users/admin/code/canteen/log/gunicorn_err.log
