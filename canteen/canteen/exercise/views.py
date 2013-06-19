@@ -54,6 +54,10 @@ def detail(request, exercise_type='',template_name="exercise/detail.html"):
         else:
             return None
 
+
+    exercise_order_list = None
+    notice = None
+
     if request.method == "POST":
         exercise_type = request.POST.get('exercise_type','')
         notice_arr = {
@@ -62,16 +66,15 @@ def detail(request, exercise_type='',template_name="exercise/detail.html"):
                 'warning':('现在不是报名时间哦','block'),
                 'info':("woops...你已经报过名了...",'info'),
                 }
-        if exercise_type is None or not is_number(exercise_type):
-            notice = notice_arr['error']
-
-        exercise_order_list = ExerciseOrder.objects.filter(id=exercise_type)
 
         if not _is_valid_time():
             notice = notice_arr['warning']
         elif _is_book_already():
             notice = notice_arr['info']
+        elif not _is_valid_type(exercise_type):
+            notice = notice_arr['error']
         else:
+            exercise_order_list = _show_exercise_order_list(exercise_type)
             exercise = Exercise.objects.filter(id=exercise_type)
             if not exercise:
                 notice = notice_arr['error']
@@ -86,8 +89,26 @@ def detail(request, exercise_type='',template_name="exercise/detail.html"):
                 except:
                     notice = notice_arr['error']
     else:
-        notice = None
-        exercise_order_list = ExerciseOrder.objects.filter(id=exercise_type)
+        exercise_order_list = _show_exercise_order_list(exercise_type)
 
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))
+
+
+#helper funcs
+def _is_valid_type(exercise_type):
+    if exercise_type is None or not is_number(exercise_type):
+        return False
+    return True
+
+def _show_exercise_order_list(exercise_type):
+
+    if _is_valid_type(exercise_type):
+        exercise = Exercise.objects.filter(id=exercise_type)[0]
+        start_datetime = exercise.offertime_start
+        end_datetime = exercise.offertime_stop
+        exercise_order_list = ExerciseOrder.objects.filter(
+                id=exercise_type,
+                date__range=(start_datetime,end_datetime))
+    else:
+        return None
