@@ -19,6 +19,7 @@ Feature
 - order list
 - foods and menu management
 - whiteList for auth(for cp intern use )
+- exercise support
 
 DEMO
 ----
@@ -31,7 +32,7 @@ TODO
 - web chatroom
 - game?? oh my =.=
 
-INSTALL
+Development INSTALL
 -------
 - prepare database
 
@@ -68,7 +69,7 @@ It's a demo based on serveral project,go check it if you want to know more.
 
 - The [ecommerce][1], a good book for newbie to master django.
 - A similar menu sys,called [canku][2] which based on nodejs.
-
+- go check the deploy.md for deployment on freebsd or *nix support
 
 [1]: http://www.amazon.com/Beginning-Django-E-Commerce-Experts-Development/dp/1430225351
 [2]: https://github.com/willerce/aidingcan
