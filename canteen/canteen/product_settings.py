@@ -158,6 +158,8 @@ INSTALLED_APPS = (
     'canteen.order',
     #menu support
     'canteen.menu',
+    #
+    'canteen.exercise',
     #gunicorn
     'gunicorn',
 )

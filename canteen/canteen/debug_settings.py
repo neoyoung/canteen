@@ -48,7 +48,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    '/home/zhkzyth/codeRep/canteen/canteen/locale/',
+    '/Users/admin/code/canteen/canteen/locale/',
 )
 
 SITE_ID = 1
