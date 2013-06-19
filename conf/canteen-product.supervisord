@@ -5,5 +5,5 @@ command=/home/zhkzyth/.virtualenvs/demoproject/bin/python /home/zhkzyth/codeRep/
 user=zhkzyth
 autostart=True
 autorestart=True
-stdout_logfile = /Users/admin/code/canteen/log/gunicorn.log
-stderr_logfile = /Users/admin/code/canteen/log/gunicorn_err.log
+stdout_logfile = /home/zhkzyth/codeRep/canteen/log/gunicorn.log
+stderr_logfile = /home/zhkzyth/codeRep/canteen/log/gunicorn_err.log
