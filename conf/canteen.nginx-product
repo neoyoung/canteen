@@ -7,6 +7,21 @@ server {
       root /home/zhkzyth/codeRep/canteen/canteen/;
    }
 
+    location /media/ {
+
+# valid_referers none blocked www.175game.com 175game.com;
+
+# if ($invalid_referer) {
+#           return 403;
+#       }
+
+        # if ($http_referer ~ "^$") {
+        #     return 404;
+        # }
+
+       root /home/zhkzyth/codeRep/canteen/canteen/;
+    } 
+
    location / {
       proxy_pass http://127.0.0.1:8000;
       proxy_set_header Host $host;
