@@ -174,28 +174,66 @@ INSTALLED_APPS = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters':{
+            'verbose': {
+                'format': '%(asctime)s [%(levelname)5s] %(module)s|%(lineno)s - %(message)s'
+                },
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+                },
+            },
+        'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse'
+                }
+            },
+        'handlers': {
+            'null':{
+                'level': 'DEBUG',
+                'class':'django.utils.log.NullHandler',
+                },
+            'mail_admins': {
+                'level': 'ERROR',
+                'class': 'django.utils.log.AdminEmailHandler',
+                'formatter':'verbose'
+                },
+            'log_local': {
+                'level':'DEBUG',
+                'class':'logging.handlers.RotatingFileHandler',
+                'filename': os.path.dirname(PROJECT_DIR) + "/log/django_log" ,
+                'maxBytes': 50000,
+                'backupCount': 2,
+                'formatter': 'verbose',
+                },
+            'console':{
+                'level':'DEBUG',
+                'class':'logging.StreamHandler',
+                'formatter':'verbose',
+                }
+            },
+        'loggers': {
+            'django':{
+                'handlers': ['null'],
+                'level': 'DEBUG',
+                'propagate': False,
+                'filters':['require_debug_false']
+                },
+            'django.request': {
+                'handlers': ['log_local','console','mail_admins'],
+                'level': 'DEBUG',
+                'propagate': True,
+                'filters':['require_debug_false']
+                },
+            'django.db.backends': {
+                'handlers': ['console'],
+                'level': 'ERROR',
+                'propagate': False,
+                'filters':['require_debug_false']
+                },
+            }
         }
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}
 
 
 #config for the debug-tool
@@ -206,26 +244,26 @@ def custom_show_toolbar(request):
     return True  # Always show toolbar, for example purposes only.
 
 DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-    #'EXTRA_SIGNALS': [''],
-    'HIDE_DJANGO_SQL': False,
-    'TAG': 'div',
-    'ENABLE_STACKTRACES': True,
-}
+        'INTERCEPT_REDIRECTS': False,
+        'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+        #'EXTRA_SIGNALS': [''],
+        'HIDE_DJANGO_SQL': False,
+        'TAG': 'div',
+        'ENABLE_STACKTRACES': True,
+        }
 
 #debug panel for configuration
 DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-)
+        'debug_toolbar.panels.version.VersionDebugPanel',
+        'debug_toolbar.panels.timer.TimerDebugPanel',
+        'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+        'debug_toolbar.panels.headers.HeaderDebugPanel',
+        'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+        'debug_toolbar.panels.template.TemplateDebugPanel',
+        'debug_toolbar.panels.sql.SQLDebugPanel',
+        'debug_toolbar.panels.signals.SignalDebugPanel',
+        'debug_toolbar.panels.logger.LoggingPanel',
+        )
 
 
 #TODO try the ssh connection
@@ -240,17 +278,17 @@ ENABLE_SSH = False
 # Each one should be a callable that takes the request object as its
 # only parameter and returns a dictionary to add to the context.
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    #    'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages',
-    #
-    'canteen.common.context_processors.canteen'
-)
+        'django.contrib.auth.context_processors.auth',
+        'django.core.context_processors.debug',
+        'django.core.context_processors.i18n',
+        'django.core.context_processors.media',
+        'django.core.context_processors.static',
+        'django.core.context_processors.tz',
+        #    'django.core.context_processors.request',
+        'django.contrib.messages.context_processors.messages',
+        #
+        'canteen.common.context_processors.canteen'
+        )
 
 #IF ENABLE SSL CONNECTION
 ENABLE_SSL = False
@@ -280,11 +318,8 @@ EMAIL_PORT = 587
 
 # Implement our auth
 AUTHENTICATION_BACKENDS = (
-    #for customer
-    'canteen.accounts.views.IpLoginBackend',
-    #for super user
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-# admin static files put here
-#ADMIN_MEDIA_PREFIX = '/static_admin/'
+        #for customer
+        'canteen.accounts.views.IpLoginBackend',
+        #for super user
+        'django.contrib.auth.backends.ModelBackend',
+        )
